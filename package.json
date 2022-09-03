@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:contract": "node build.js",
     "preview": "vite preview",
     "deploy": "arkb deploy dist --use-bundler https://node2.bundlr.network --wallet wallet.json",
     "gen_wallet": "node scripts/wallet.js"
@@ -13,14 +14,20 @@
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^1.0.0-next.30",
     "@tailwindcss/typography": "^0.5.4",
+    "@verto/flex": "^0.1.14",
     "arkb": "^1.1.60",
     "arweave": "^1.11.4",
     "autoprefixer": "^10.4.4",
     "daisyui": "^2.11.1",
+    "esbuild": "^0.15.6",
     "postcss": "^8.4.12",
     "svelte": "^3.44.0",
     "tailwindcss": "^3.0.23",
     "tinro": "^0.6.12",
-    "vite": "^2.8.0"
+    "vite": "^2.8.0",
+    "vitest": "^0.22.1"
+  },
+  "dependencies": {
+    "warp-contracts": "^1.2.2"
   }
 }
