@@ -68,10 +68,13 @@
       <form class="form" on:submit|preventDefault={doDeploy}>
         {#if files[0]}
           <img
-            class="border-2 border-secondary"
+            class="border-2 border-secondary w-[500px]"
             src={URL.createObjectURL(files[0])}
             alt="img"
           />
+          <div class="mt-2 flex justify-end">
+            <button on:click={() => (files = [])} class="link">clear</button>
+          </div>
         {:else}
           <div class="form-control">
             <label for="file" class="label">Choose Image</label>
