@@ -5,6 +5,7 @@
 
   import Home from "./pages/home.svelte";
   import About from "./pages/about.svelte";
+  import Show from "./pages/show.svelte";
 
   router.mode.hash();
   router.subscribe((_) => window.scrollTo(0, 0));
@@ -17,5 +18,8 @@
   </Route>
   <Route path="/about">
     <About />
+  </Route>
+  <Route path="/show/:id" let:meta>
+    <Show id={meta.params.id} />
   </Route>
 </Transition>

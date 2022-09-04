@@ -68,7 +68,7 @@ async function createAndTag(ctx) {
   tx.addTag('Content-Type', "application/x.arweave-manifest+json")
   tx.addTag('Contract-Src', SRC)
   tx.addTag('Init-State', JSON.stringify({
-    ticker: "IMG-" + slugify(ctx.name),
+    ticker: "ATOMIC-ASSET-" + ctx.assetId,
     balances: {
       [ctx.addr]: 10000
     },
