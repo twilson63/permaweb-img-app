@@ -28,6 +28,8 @@
     "vitest": "^0.22.1"
   },
   "dependencies": {
+    "marked": "^4.1.0",
+    "ramda": "^0.28.0",
     "warp-contracts": "^1.2.2"
   }
 }
