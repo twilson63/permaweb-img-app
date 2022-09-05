@@ -1,81 +1,26 @@
-<h1 align="center">HypAR Template</h1>
-<p>Setup Permaweb Apps ⚡️ HypAR Apps!</p>
+# img
 
-## Contents
+\`img\` is a demo application that has been created to showcase Atomic Assets. An Atomic Asset is
+a Tradeable PST, that can be STAMPed. The \`STAMP\` process gives viewers the ability to create a proof of 
+attention. And by making the data tradeable, it allows the community to share in the rewards.
+ 
+For more information about the tutorial, you can find it here: https://pjgr5rzoytzbk7yizk7755n226aurasg4m7qojmwjhbcujbjhe5a.arweave.net/ek0exy7E8hV_CMq__vW614FIgkbjPwcllknCKiQpOTo
+You can also find the completed github repository for this tutorial here: https://github.com/twilson63/permaweb-img-app/tree/atomic-tx
 
-* [Welcome](#welcome)
-* [Usage](#usage)
-* [Stack](#stack)
-* [Contributions](#contributions)
 
----
+## Development Setup
 
-## Welcome
-
-The Permaweb is changing the internet and the way applications are built, this toolkit gives web developers an on ramp to delivering permaweb applications.
-
-## Usage
-
-``` sh
-npx degit twilson63/hypar myapp
+```bash
+yarn
+yarn dev
 ```
 
-Development Mode
+## Deploy
 
-``` sh
-npm install
-npm run dev
+> NOTE: you need a wallet.json file in the project directory
+
+```bash
+yarn build
+yarn deploy
 ```
 
-Build
-
-``` sh
-npm run build
-```
-
-Deploy to permaweb
-
-``` sh
-npm run deploy [wallet.json]
-```
-
----
-
-## Stack
-
-The stack uses tools that promote efficiency for the permaweb platform and focused on the web and open source techonologies.
-
-* DaisyUI/TailwindCSS 
-* Svelte
-* arkb
-
-Svelte is focused on building high performing web applications with incredible developer experience!
-DaisyUI/TailwindCSS gives the developer a solid component library with the power of functional CSS
-arkb makes it easy to deploy to the permaweb if all the app files are sub 100k then you can deploy for free
-
-Libraries
-
-* Arweave
-* Warp
-* tinro
-
----
-
-## Contributing 
-
-Template Golas
-
-* Frictionless experience
-* Minimal
-* Builds should be small
-* Few opinions as possible
-
-Contributions are welcome, lets build the easiest environment to build for the permaweb!
-
-* Pull requests are welcome!
-
-Don't like the Stack, fork and add your favorite stack, but lets make these templates easy to use for the permaweb:
-
-* dev mode
-* build mode
-* deploy mode
