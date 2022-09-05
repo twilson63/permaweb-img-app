@@ -1,4 +1,5 @@
 <script>
+  import { imgCache } from "../store.js";
   import { deploy } from "../lib/deploy-path.js";
   import DeployDialog from "../dialogs/deploy.svelte";
   import ErrorDialog from "../dialogs/error.svelte";
@@ -37,20 +38,37 @@
     ]);
     const addr = await arweaveWallet.getActiveAddress();
 
-    deployDlg = true;
-    const data = await toArrayBuffer(files[0]);
-    const result = await deploy(title, description, addr, files[0].type, data);
+    try {
+      deployDlg = true;
+      const data = await toArrayBuffer(files[0]);
+      const result = await deploy(
+        title,
+        description,
+        addr,
+        files[0].type,
+        data
+      );
 
-    deployDlg = false;
+      deployDlg = false;
 
-    // reset form
-    e.target.reset();
-    // files = [];
-    // title = "";
-    // description = "";
+      // reset form
+      e.target.reset();
+      // files = [];
+      // title = "";
+      // description = "";
 
-    tx = result.id;
-    confirmDlg = true;
+      tx = result.id;
+      $imgCache = [
+        ...$imgCache,
+        { id: tx, src: URL.createObjectURL(files[0]) },
+      ];
+
+      confirmDlg = true;
+    } catch (e) {
+      deployDlg = false;
+      errorMessage = e.message;
+      errorDlg = true;
+    }
   }
 </script>
 
@@ -105,6 +123,7 @@
             bind:value={description}
           />
         </div>
+        <!--
         <div class="form-control">
           <label for="topics" class="label">Topics</label>
           <input id="topics" class="input input-bordered" bind:value={topics} />
@@ -112,6 +131,7 @@
             >Enter a comma-separated set of topics to describe this image</label
           >
         </div>
+        -->
         <div class="mt-16">
           <button class="btn btn-block">Deploy</button>
         </div>

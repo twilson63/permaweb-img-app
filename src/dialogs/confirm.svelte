@@ -14,6 +14,12 @@
   >
     <h3 class="mb-8 text-3xl bg-success text-white p-2 mt-4">Success!</h3>
     <p class="text-sm">{tx}</p>
+    <!--
+    <blockquote>
+      NOTE: When uploading large images it may take a few minutes for the image
+      to show up on the network.
+    </blockquote>
+    -->
     <a href="/show/{tx}" class="link">View Atomic TX</a>
   </div>
 </Modal>
