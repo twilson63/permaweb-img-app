@@ -1,13 +1,19 @@
 <script>
   import { getAssetData } from "../lib/asset.js";
   import Construction from "../dialogs/construction.svelte";
+  import Stamping from "../dialogs/stamping.svelte";
+  import ErrorDialog from "../dialogs/error.svelte";
+
   import { onMount } from "svelte";
   import { imgCache } from "../store.js";
-  import { isVouched, stamp } from "../lib/stamp.js";
+  import { isVouched, stamp, getCount } from "../lib/stamp.js";
 
   export let id;
   let src = "https://placehold.co/400";
   let imageMsg = "";
+  let stampDlg = false;
+  let errorDlg = false;
+  let errorMsg = "";
 
   onMount(async () => {
     const i = $imgCache.find((img) => img.id === id);
@@ -53,13 +59,24 @@
       alert("Wallet not connected!");
       return;
     }
+    stampDlg = true;
     const addr = await window.arweaveWallet.getActiveAddress();
     isVouched(addr)
       .then((res) =>
         res ? stamp(id) : Promise.reject(new Error("could not stamp asset"))
       )
-      .then((res) => console.log(res));
+      .then((res) => {
+        assetCount = getCount(id);
+        stampDlg = false;
+      })
+      .catch((e) => {
+        stampDlg = false;
+        errorMsg = e.message;
+        errorDlg = true;
+      });
   }
+
+  let assetCount = getCount(id);
 </script>
 
 <nav
@@ -82,10 +99,20 @@
           <h1 class="text-5xl mb-8">{asset.title}</h1>
           <p class="text-xl">{asset.description}</p>
           <div class="mt-8 space-y-4">
-            <div class="mb-4">Count: 0</div>
+            <div class="mb-4">
+              Count:
+              {#await assetCount then count}
+                {count}
+              {/await}
+            </div>
             <button
               on:click={handleStamp}
               class="btn btn-block btn-outline rounded-none">STAMP</button
+            >
+            <a
+              href="/hx/{asset.owner}"
+              class="btn btn-block btn-outline btn-secondary rounded-none"
+              >Owner History</a
             >
             <!--
             <button
@@ -121,3 +148,5 @@
   {msg}
   on:cancel={() => (constructionDlg = false)}
 />
+<Stamping bind:open={stampDlg} />
+<ErrorDialog bind:open={errorDlg} msg={errorMsg} />
