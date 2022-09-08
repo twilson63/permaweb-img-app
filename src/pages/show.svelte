@@ -3,13 +3,13 @@
   import Construction from "../dialogs/construction.svelte";
   import { onMount } from "svelte";
   import { imgCache } from "../store.js";
+  import { isVouched, stamp } from "../lib/stamp.js";
 
   export let id;
   let src = "https://placehold.co/400";
   let imageMsg = "";
 
   onMount(async () => {
-    console.log(id);
     const i = $imgCache.find((img) => img.id === id);
 
     if (i) {
@@ -47,6 +47,19 @@
         });
     });
   }
+
+  async function handleStamp() {
+    if (!window.arweaveWallet) {
+      alert("Wallet not connected!");
+      return;
+    }
+    const addr = await window.arweaveWallet.getActiveAddress();
+    isVouched(addr)
+      .then((res) =>
+        res ? stamp(id) : Promise.reject(new Error("could not stamp asset"))
+      )
+      .then((res) => console.log(res));
+  }
 </script>
 
 <nav
@@ -71,10 +84,7 @@
           <div class="mt-8 space-y-4">
             <div class="mb-4">Count: 0</div>
             <button
-              on:click={() => {
-                msg = "STAMP feature is not implemented yet, coming soon!";
-                constructionDlg = true;
-              }}
+              on:click={handleStamp}
               class="btn btn-block btn-outline rounded-none">STAMP</button
             >
             <!--

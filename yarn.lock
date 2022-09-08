@@ -4294,10 +4294,10 @@ warp-contracts@^1.1.7:
     unzipit "^1.4.0"
     vm2 "3.9.9"
 
-warp-contracts@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/warp-contracts/-/warp-contracts-1.2.2.tgz#6504cc43fc12121f8ae3ccdac975292a90e61b0b"
-  integrity sha512-ZzdnUBn4w220Bh38HQyqyVVzuSND/9vZTljuV+uIuUWNO6prpAJGqjEOVj1T/DgdGhi5MJ9dP3XxpMjFi08ayw==
+warp-contracts@^1.2.4:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/warp-contracts/-/warp-contracts-1.2.4.tgz#452cb0dc545fad4f60aad39a0339df6f4e8fc6a4"
+  integrity sha512-4f/mfBby33+3z/RLNmFPf+k1aZQ/LtIRHdElqdJ5l57OW0GESEFb0pzHBc2WZYl4Qa+Mocbg7xHhC2a62eiPgw==
   dependencies:
     "@assemblyscript/loader" "^0.19.23"
     "@idena/vrf-js" "^1.0.1"

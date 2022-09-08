@@ -90,6 +90,15 @@ async function createAndTag(ctx) {
 async function upload(ctx) {
   const tx = await arweave.createTransaction({ data: ctx.data })
   tx.addTag('Content-Type', ctx.contentType)
+  // earn bar while you upload
+  /*
+  tx.addTag('Protocol-Name', 'BAR')
+  tx.addTag('Action', 'Burn')
+  tx.addTag('App-Name', 'SmartWeaveAction')
+  tx.addTag('App-Version', '0.3.0')
+  tx.addTag('Input', JSON.stringify({ function: 'mint' }))
+  tx.addTag('Contract', 'JnPMxlTvHtdMsEHgTJrhYvoBL33f_-FfNPt6a9qhaF4')
+  */
   await arweave.transactions.sign(tx)
   await arweave.transactions.post(tx)
   return { ...ctx, assetId: tx.id }
