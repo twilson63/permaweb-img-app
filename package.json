@@ -28,6 +28,7 @@
     "vitest": "^0.22.1"
   },
   "dependencies": {
+    "arweave-wallet-connector": "^0.0.31",
     "marked": "^4.1.0",
     "ramda": "^0.28.0",
     "warp-contracts": "^1.2.4"

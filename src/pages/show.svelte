@@ -1,4 +1,5 @@
 <script>
+  import Navbar from "../components/navbar.svelte";
   import { getAssetData } from "../lib/asset.js";
   import Construction from "../dialogs/construction.svelte";
   import Stamping from "../dialogs/stamping.svelte";
@@ -79,12 +80,7 @@
   let assetCount = getCount(id);
 </script>
 
-<nav
-  class="flex space-x-4 h-[75px] bg-secondary text-secondary-content flex items-center"
->
-  <a class="btn btn-ghost" href="/">img</a>
-  <a class="btn btn-ghost" href="/about">About</a>
-</nav>
+<Navbar />
 {#await getAssetData(id) then asset}
   <main>
     <section class="hero min-h-screen bg-base-100">
@@ -133,7 +129,7 @@
             >
             -->
             <a
-              href="/"
+              href="/home"
               class="btn btn-block btn-outline btn-primary rounded-none"
               >Back to Upload</a
             >

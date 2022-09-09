@@ -1,16 +1,12 @@
 <script>
+  import Navbar from "../components/navbar.svelte";
   import { imagesByOwner } from "../lib/asset.js";
   import { take } from "ramda";
 
   export let addr;
 </script>
 
-<nav
-  class="flex space-x-4 h-[75px] bg-secondary text-secondary-content flex items-center"
->
-  <a class="btn btn-ghost" href="/">img</a>
-  <a class="btn btn-ghost" href="/about">About</a>
-</nav>
+<Navbar />
 <main class="px-8 max-w-screen">
   <header class="my-16">
     <h1 class="text-3xl">History</h1>

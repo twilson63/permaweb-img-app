@@ -4,6 +4,7 @@
   import DeployDialog from "../dialogs/deploy.svelte";
   import ErrorDialog from "../dialogs/error.svelte";
   import ConfirmDialog from "../dialogs/confirm.svelte";
+  import Navbar from "../components/navbar.svelte";
 
   let files = [];
   let title = "";
@@ -72,12 +73,7 @@
   }
 </script>
 
-<nav
-  class="flex space-x-4 h-[75px] bg-secondary text-secondary-content flex items-center"
->
-  <a class="btn btn-ghost" href="/">img</a>
-  <a class="btn btn-ghost" href="/about">About</a>
-</nav>
+<Navbar />
 <main>
   <section class="hero min-h-screen bg-base-100">
     <div class="hero-content flex-col">

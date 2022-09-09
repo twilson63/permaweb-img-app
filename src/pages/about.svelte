@@ -1,13 +1,9 @@
 <script>
+  import Navbar from "../components/navbar.svelte";
   import { marked } from "marked";
 </script>
 
-<nav
-  class="flex space-x-4 h-[75px] bg-secondary text-secondary-content flex items-center"
->
-  <a class="btn btn-ghost" href="/">img</a>
-  <a class="btn btn-ghost" href="/about">About</a>
-</nav>
+<Navbar />
 <main>
   <section class="hero min-h-screen bg-base-100">
     <div class="hero-content flex-col">
