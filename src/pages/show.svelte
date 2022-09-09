@@ -9,7 +9,7 @@
 
   import { onMount } from "svelte";
   import { imgCache, profile } from "../store.js";
-  import { isVouched, stamp, getCount } from "../lib/stamp.js";
+  import { isVouched, stamp, getCount, getRewards } from "../lib/stamp.js";
 
   export let id;
   let src = "https://placehold.co/400";
@@ -99,11 +99,22 @@
           <h1 class="text-5xl mb-8">{asset.title}</h1>
           <p class="text-xl">{asset.description}</p>
           <div class="mt-8 space-y-4">
-            <div class="mb-4">
-              Count:
-              {#await assetCount then count}
-                {count}
-              {/await}
+            <div class="flex justify-between">
+              <div class="mb-4">
+                STAMPs:
+                {#await assetCount then count}
+                  {count}
+                {/await}
+              </div>
+              <div>
+                Rewards:
+                {#await getRewards(id) then rewards}
+                  {rewards}
+                {/await}
+              </div>
+            </div>
+            <div>
+              Link: <a class="link" href="https://arweave.net/{id}">{id}</a>
             </div>
             {#if $profile}
               <button

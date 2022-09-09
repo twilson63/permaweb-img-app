@@ -1,5 +1,5 @@
 import { WarpFactory, defaultCacheOptions } from 'warp-contracts/web'
-import { compose, propEq, values, length, prop, filter } from 'ramda'
+import { add, compose, propEq, values, length, prop, filter, reduce, pluck } from 'ramda'
 
 const arweave = Arweave.init({
   host: 'arweave.net',
@@ -17,6 +17,13 @@ const stampCount = asset => compose(
   filter(propEq('asset', asset)),
   values,
   prop('stamps')
+)
+
+const rewardSum = asset => compose(
+  reduce(add, 0),
+  pluck('coins'),
+  filter(propEq('asset', asset)),
+  prop('rewardLog')
 )
 
 export async function stamp(transactionId) {
@@ -46,4 +53,10 @@ export async function getCount(asset) {
   return fetch(`${CACHE}/${STAMPCOIN}`)
     .then(res => res.json())
     .then(stampCount(asset))
+}
+
+export async function getRewards(asset) {
+  return fetch(`${CACHE}/${STAMPCOIN}`)
+    .then(res => res.json())
+    .then(rewardSum(asset))
 }
