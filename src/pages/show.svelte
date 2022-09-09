@@ -4,9 +4,11 @@
   import Construction from "../dialogs/construction.svelte";
   import Stamping from "../dialogs/stamping.svelte";
   import ErrorDialog from "../dialogs/error.svelte";
+  import ConnectModal from "../dialogs/connect.svelte";
+  import WalletHelp from "../dialogs/wallet-help.svelte";
 
   import { onMount } from "svelte";
-  import { imgCache } from "../store.js";
+  import { imgCache, profile } from "../store.js";
   import { isVouched, stamp, getCount } from "../lib/stamp.js";
 
   export let id;
@@ -15,6 +17,8 @@
   let stampDlg = false;
   let errorDlg = false;
   let errorMsg = "";
+  let showConnect = false;
+  let showHelp = false;
 
   onMount(async () => {
     const i = $imgCache.find((img) => img.id === id);
@@ -101,15 +105,23 @@
                 {count}
               {/await}
             </div>
-            <button
-              on:click={handleStamp}
-              class="btn btn-block btn-outline rounded-none">STAMP</button
-            >
+            {#if $profile}
+              <button
+                on:click={handleStamp}
+                class="btn btn-block btn-outline rounded-none">STAMP</button
+              >
+            {:else}
+              <button
+                class="btn btn-block rounded-none"
+                on:click={() => (showConnect = true)}>Connect Wallet</button
+              >
+            {/if}
             <a
               href="/hx/{asset.owner}"
               class="btn btn-block btn-outline btn-secondary rounded-none"
               >Owner History</a
             >
+
             <!--
             <button
               on:click={() => {
@@ -146,3 +158,5 @@
 />
 <Stamping bind:open={stampDlg} />
 <ErrorDialog bind:open={errorDlg} msg={errorMsg} />
+<ConnectModal bind:open={showConnect} on:help={() => (showHelp = true)} />
+<WalletHelp bind:open={showHelp} />

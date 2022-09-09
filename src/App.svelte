@@ -9,6 +9,8 @@
   import Show from "./pages/show.svelte";
   import History from "./pages/history.svelte";
 
+  import { profile } from "./store.js";
+
   router.mode.hash();
   router.subscribe((_) => window.scrollTo(0, 0));
 </script>
@@ -19,7 +21,11 @@
     <Start />
   </Route>
   <Route path="/home">
-    <Home />
+    {#if $profile}
+      <Home />
+    {:else}
+      <Start />
+    {/if}
   </Route>
   <Route path="/about">
     <About />

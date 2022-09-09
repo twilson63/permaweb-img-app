@@ -1,7 +1,7 @@
 <script>
   import { profile } from "../store.js";
 
-  const addr = $profile.addr;
+  const addr = $profile ? $profile.addr : "";
 </script>
 
 <div class="navbar bg-base-100">

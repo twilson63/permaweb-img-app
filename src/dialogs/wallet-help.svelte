@@ -3,7 +3,12 @@
   export let open;
 </script>
 
-<Modal bind:open bgColor="bg-white" border="border-4 border-[#929292]">
+<Modal
+  bind:open
+  bgColor="bg-white"
+  border="border-4 border-[#929292]"
+  cancel={false}
+>
   <div class="px-[36px] py-[24px] flex flex-col space-y-8">
     <img class="h-[55px] w-[55px]" src="assets/wallet.svg" alt="wallet" />
     <h2 class="text-2xl font-bold text-[#160042]">

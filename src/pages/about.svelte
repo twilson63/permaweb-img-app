@@ -15,8 +15,8 @@
 a Tradeable PST, that can be STAMPed. The \`STAMP\` process gives viewers the ability to create a proof of 
 attention. And by making the data tradeable, it allows the community to share in the rewards.
  
-For more information about the tutorial, you can find it here: https://pjgr5rzoytzbk7yizk7755n226aurasg4m7qojmwjhbcujbjhe5a.arweave.net/ek0exy7E8hV_CMq__vW614FIgkbjPwcllknCKiQpOTo
-You can also find the completed github repository for this tutorial here: https://github.com/twilson63/permaweb-img-app/tree/atomic-tx
+For more information about the tutorial, you can find it here: [Tutorial](https://pjgr5rzoytzbk7yizk7755n226aurasg4m7qojmwjhbcujbjhe5a.arweave.net/ek0exy7E8hV_CMq__vW614FIgkbjPwcllknCKiQpOTo)
+You can also find the completed github repository for this tutorial here: [Github Source](https://github.com/twilson63/permaweb-img-app/tree/atomic-tx)
         
         `)}
       </div>
