@@ -82,14 +82,21 @@
   }
 
   let assetCount = getCount(id);
+  let assetData = getAssetData(id);
 </script>
 
 <svelte:head>
-  {#await getAssetData(id) then asset}
+  {#await assetData then asset}
     <meta property="og:title" content={asset.title} />
+    <meta property="og:type" content={asset.type} />
+    <meta property="og:description" content={asset.description} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={asset.title} />
+    <meta name="twitter:description" content={asset.description} />
+    <meta name="twitter:image" content="{location.origin}/{id}" />
   {/await}
-  <meta property="og:image" content="https://{location.origin}/{id}" />
-  <meta property="og:url" content="https://{location.origin}/#/show/{id}" />
+  <meta property="og:image" content="{location.origin}/{id}" />
+  <meta property="og:url" content="{location.origin}/#/show/{id}" />
 </svelte:head>
 
 <Navbar />
