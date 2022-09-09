@@ -84,6 +84,14 @@
   let assetCount = getCount(id);
 </script>
 
+<svelte:head>
+  {#await getAssetData(id) then asset}
+    <meta property="og:title" content={asset.title} />
+  {/await}
+  <meta property="og:image" content="https://{location.origin}/{id}" />
+  <meta property="og:url" content="https://{location.origin}/#/show/{id}" />
+</svelte:head>
+
 <Navbar />
 {#await getAssetData(id) then asset}
   <main>
