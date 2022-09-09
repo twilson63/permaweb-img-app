@@ -7,9 +7,10 @@
   bind:open
   bgColor="bg-white"
   border="border-4 border-[#929292]"
-  cancel={false}
+  cancel={true}
+  on:cancel={() => (open = false)}
 >
-  <div class="px-[36px] py-[24px] flex flex-col space-y-8">
+  <div class="px-[36px] py-[16px] flex flex-col space-y-8">
     <img class="h-[55px] w-[55px]" src="assets/wallet.svg" alt="wallet" />
     <h2 class="text-2xl font-bold text-[#160042]">
       Arweave wallet needed to post
@@ -30,7 +31,7 @@
       href="https://arweave.app"
       target="_blank"
       on:click={() => (open = false)}
-      class="btn btn-block rounded-full bg-[#E4E6F1] text-black"
+      class="btn btn-block rounded-full bg-[#E4E6F1] text-black hover:bg-gray-400"
       >Create wallet via Arweave.app</a
     >
   </div>

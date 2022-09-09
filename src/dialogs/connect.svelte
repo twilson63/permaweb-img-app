@@ -40,7 +40,8 @@
   bind:open
   bgColor="bg-white"
   border="border-4 border-[#929292]"
-  cancel={false}
+  cancel={true}
+  on:cancel={() => (open = false)}
 >
   <div class="px-[36px] py-[24px] flex flex-col space-y-8">
     <img class="h-[55px] w-[55px]" src="assets/wallet.svg" alt="wallet" />
@@ -48,12 +49,13 @@
       Arweave wallet needed to post
     </h2>
     <p class="text-xl  text-[#160042]">Select your preferred wallet below:</p>
-    <button class="btn btn-block rounded-full" on:click={arconnect}
-      >ArConnect</button
+    <button
+      class="btn btn-block rounded-full hover:bg-gray-400"
+      on:click={arconnect}>ArConnect</button
     >
     <button
       on:click={arwallet}
-      class="btn btn-block rounded-full bg-[#E4E6F1] text-black"
+      class="btn btn-block rounded-full bg-[#E4E6F1] text-black hover:bg-gray-400"
       >Arweave.app</button
     >
     <button
