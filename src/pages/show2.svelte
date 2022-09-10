@@ -1,6 +1,7 @@
 <script>
   import Navbar from "../components/navbar.svelte";
   import { getAssetData } from "../lib/asset.js";
+  import { atomicToStamp } from "../lib/utils.js";
   import Construction from "../dialogs/construction.svelte";
   import Stamping from "../dialogs/stamping.svelte";
   import ErrorDialog from "../dialogs/error.svelte";
@@ -168,7 +169,7 @@
                   <div class="flex space-x-4">
                     <div class="font-bold">$TAMP</div>
                     {#await getRewards(id) then rewards}
-                      <div>{rewards}</div>
+                      <div>{Number(atomicToStamp(rewards)).toFixed(5)}</div>
                     {/await}
                   </div>
                 </div>
