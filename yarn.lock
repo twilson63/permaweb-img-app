@@ -749,7 +749,7 @@ arconnect@^0.4.2:
   dependencies:
     arweave "^1.10.13"
 
-ardb@^1.1.8:
+ardb@^1.1.10, ardb@^1.1.8:
   version "1.1.10"
   resolved "https://registry.yarnpkg.com/ardb/-/ardb-1.1.10.tgz#9f2de81e6ff7613c962e39536f881d58c11b79ff"
   integrity sha512-LtDa0T6FXiNG9D9kcyboEFfmvVJ9Y+W8404UTQS3BkvgqHHKsgFUuftft3RepAZVvR2bc+z5z+/koqgUe7LIUA==
@@ -802,6 +802,14 @@ articles@~0.2.1:
   resolved "https://registry.yarnpkg.com/articles/-/articles-0.2.2.tgz#cc6b429f8cfa811f41e7a08505abbb4e45503197"
   integrity sha512-S3Y4MPp+LD/l0HHm/4yrr6MoXhUkKT98ZdsV2tkTuBNywqUXEtvJT+NBO3KTSQEttc5EOwEJe2Xw8cZ9TI5Hrw==
 
+arweave-account@^1.3.2:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/arweave-account/-/arweave-account-1.3.2.tgz#ee5f5f3a46b957499f1fbed9375519feede5c898"
+  integrity sha512-zeVNMXRnZztuSqTzL2GcOUo1n1oMJKTe41pKnUMLx3YFxDMsfPtEbLZ2hI9B+9389OpRLnnispuYquCPWPdmKA==
+  dependencies:
+    ardb "^1.1.10"
+    arweave "^1.10.23"
+
 arweave-multihost@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/arweave-multihost/-/arweave-multihost-0.1.0.tgz#6f5dd1f42638dad8414cb20c0a19fee0a6a59844"
@@ -838,7 +846,7 @@ arweave@1.11.4, arweave@^1.10.13, arweave@^1.10.15, arweave@^1.10.16, arweave@^1
     bignumber.js "^9.0.2"
     util "^0.12.4"
 
-arweave@1.11.6:
+arweave@1.11.6, arweave@^1.10.23:
   version "1.11.6"
   resolved "https://registry.yarnpkg.com/arweave/-/arweave-1.11.6.tgz#5afcded201c6f123dd62e5bfae1b72ca793ec7c2"
   integrity sha512-D6N6e2z7oZoxFhu/qElLwQ2T8DxZ8xIqDB+Y16KHvZbassIrrS9iALwxLdaFYNInuyElg6i7qotBMcShWbFSTw==
