@@ -21,6 +21,7 @@
   let errorMsg = "";
   let showConnect = false;
   let showHelp = false;
+  let tryingToStamp = false;
 
   onMount(async () => {
     const i = $imgCache.find((img) => img.id === id);
@@ -63,9 +64,11 @@
 
   async function handleStamp() {
     if (!window.arweaveWallet) {
-      alert("Wallet not connected!");
+      tryingToStamp = true;
+      showConnect = true;
       return;
     }
+    tryingToStamp = false;
     stampDlg = true;
     const addr = await window.arweaveWallet.getActiveAddress();
     isVouched(addr)
@@ -87,6 +90,12 @@
     return `https://twitter.com/intent/tweet?text=${encodeURI(
       "🪧 STAMP\n\n" + title.replace("#", "no ") + "\n\n🐘"
     )}&url=https://img.arweave.dev/%23/show/${id}`;
+  }
+
+  function connected() {
+    if (tryingToStamp) {
+      handleStamp();
+    }
   }
 
   let assetCount = getCount(id);
@@ -191,5 +200,9 @@
 />
 <Stamping bind:open={stampDlg} />
 <ErrorDialog bind:open={errorDlg} msg={errorMsg} />
-<ConnectModal bind:open={showConnect} on:help={() => (showHelp = true)} />
+<ConnectModal
+  bind:open={showConnect}
+  on:connected={connected}
+  on:help={() => (showHelp = true)}
+/>
 <WalletHelp bind:open={showHelp} />
