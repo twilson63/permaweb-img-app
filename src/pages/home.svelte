@@ -1,10 +1,14 @@
 <script>
+  import { providers } from "ethers";
+
   import { imgCache } from "../store.js";
   import { deploy } from "../lib/deploy-path.js";
   import DeployDialog from "../dialogs/deploy.svelte";
   import ErrorDialog from "../dialogs/error.svelte";
   import ConfirmDialog from "../dialogs/confirm.svelte";
   import Navbar from "../components/navbar.svelte";
+
+  import { WebBundlr } from "@bundlr-network/client";
 
   let files = [];
   let title = "";
@@ -71,6 +75,33 @@
       errorDlg = true;
     }
   }
+
+  async function deployMatic() {
+    await window.ethereum.enable();
+    const provider = new providers.Web3Provider(window.ethereum);
+    await provider._ready();
+    /*
+    const bundlr = new WebBundlr(
+      "https://node1.bundlr.network",
+      "matic",
+      provider
+    );
+    await bundlr.ready();
+    console.log("size", files[0].size);
+    // fund account
+    const price = await bundlr.getPrice(files[0].size);
+    const balance = await bundlr.getLoadedBalance();
+
+    if (balance.isLessThan(price)) {
+      await bundlr.fund(balance.minus(price).multipliedBy(1.1));
+    }
+    const tx = await bundlr.createTransaction(await toArrayBuffer(files[0]));
+    await tx.sign();
+    console.log(tx.id);
+    await tx.upload();
+    */
+    confirmDlg = true;
+  }
 </script>
 
 <Navbar />
@@ -128,8 +159,13 @@
           >
         </div>
         -->
-        <div class="mt-16">
+        <div class="mt-16 space-y-4">
           <button class="btn btn-block">Deploy</button>
+          <button
+            type="button"
+            on:click={deployMatic}
+            class="btn btn-block btn-primary">Deploy with $MATIC</button
+          >
         </div>
       </form>
     </div>

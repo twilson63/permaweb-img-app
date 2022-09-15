@@ -11,6 +11,9 @@ const publicUrl = `3000-${host}`
 export default defineConfig({
   base: '',
   plugins: [svelte()],
+  build: {
+    target: ['esnext']
+  },
   server: {
     hmr: {
       clientPort: host ? 443 : 3000,
