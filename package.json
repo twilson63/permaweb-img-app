@@ -30,12 +30,17 @@
   "dependencies": {
     "@bundlr-network/client": "^0.8.5",
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
+    "@esbuild-plugins/node-modules-polyfill": "^0.1.4",
     "arweave-account": "^1.3.2",
     "arweave-wallet-connector": "^0.0.31",
     "bignumber.js": "^9.1.0",
     "ethers": "^5.7.1",
     "marked": "^4.1.0",
     "ramda": "^0.28.0",
+    "rollup-plugin-node-polyfills": "^0.2.1",
+    "rollup-plugin-polyfill-node": "^0.10.2",
+    "stream-browserify": "^3.0.0",
+    "vite-plugin-notifier": "^0.1.5",
     "warp-contracts": "^1.2.4"
   }
 }

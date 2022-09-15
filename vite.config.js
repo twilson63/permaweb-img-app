@@ -3,6 +3,8 @@ import { svelte } from '@sveltejs/vite-plugin-svelte'
 import autoprefixer from 'autoprefixer'
 import tailwind from 'tailwindcss'
 import tailwindConfig from './tailwind.config.js'
+import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfill";
+import notifier from 'vite-plugin-notifier';
 
 const [schema, host] = process.env.GITPOD_WORKSPACE_URL ? process.env.GITPOD_WORKSPACE_URL.split('://') : [null, null]
 const publicUrl = `3000-${host}`
@@ -10,7 +12,29 @@ const publicUrl = `3000-${host}`
 // https://vitejs.dev/config/
 export default defineConfig({
   base: '',
-  plugins: [svelte()],
+  plugins: [svelte(), notifier()],
+  resolve: {
+    alias: {
+      stream: "stream-browserify"
+
+    }
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      // Node.js global to browser globalThis
+      define: {
+        global: "globalThis",
+      },
+      // Enable esbuild polyfill plugins
+      plugins: [
+        NodeGlobalsPolyfillPlugin({
+          process: true,
+          buffer: true,
+          define: {}
+        }),
+      ],
+    },
+  },
   build: {
     target: ['esnext']
   },
