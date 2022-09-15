@@ -15,8 +15,9 @@ export default defineConfig({
   plugins: [svelte(), notifier()],
   resolve: {
     alias: {
-      stream: "stream-browserify"
-
+      stream: "stream-browserify",
+      crypto: "crypto-browserify",
+      assert: 'assert-browserify'
     }
   },
   optimizeDeps: {

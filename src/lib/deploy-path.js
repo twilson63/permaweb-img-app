@@ -26,6 +26,12 @@ export async function deploy(name, description, addr, contentType, data) {
     .then(post)
 }
 
+export async function deployBundlr(name, description, addr, contentType, assetId) {
+  return Promise.resolve({ name, description, addr, contentType, assetId })
+    .then(dispatch)
+    .then(post)
+}
+
 async function post(ctx) {
   const tx = await createAndTag(ctx)
   await arweave.transactions.sign(tx)

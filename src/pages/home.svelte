@@ -1,8 +1,8 @@
 <script>
-  import { providers } from "ethers";
-
+  //import { providers } from "ethers";
+  import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
   import { imgCache } from "../store.js";
-  import { deploy } from "../lib/deploy-path.js";
+  import { deploy, deployBundlr } from "../lib/deploy-path.js";
   import DeployDialog from "../dialogs/deploy.svelte";
   import ErrorDialog from "../dialogs/error.svelte";
   import ConfirmDialog from "../dialogs/confirm.svelte";
@@ -76,30 +76,59 @@
     }
   }
 
-  async function deployMatic() {
-    await window.ethereum.enable();
-    const provider = new providers.Web3Provider(window.ethereum);
-    await provider._ready();
-    /*
+  async function deploySol(e) {
+    if (!window.solana) {
+      alert("Phantom Wallet is required!");
+      return;
+    }
+
+    deployDlg = true;
+    await window.solana.connect();
+    const provider = new PhantomWalletAdapter();
+    await provider.connect();
+
     const bundlr = new WebBundlr(
       "https://node1.bundlr.network",
-      "matic",
+      "solana",
       provider
     );
     await bundlr.ready();
-    console.log("size", files[0].size);
     // fund account
     const price = await bundlr.getPrice(files[0].size);
     const balance = await bundlr.getLoadedBalance();
 
     if (balance.isLessThan(price)) {
-      await bundlr.fund(balance.minus(price).multipliedBy(1.1));
+      await bundlr.fund(price.minus(balance).multipliedBy(1.1).toFixed(0));
     }
-    const tx = await bundlr.createTransaction(await toArrayBuffer(files[0]));
-    await tx.sign();
-    console.log(tx.id);
-    await tx.upload();
-    */
+
+    const trx = await bundlr.createTransaction(await toArrayBuffer(files[0]), {
+      tags: [{ name: "Content-Type", value: files[0].type }],
+    });
+    await trx.sign();
+
+    const result = await trx.upload();
+
+    const addr = await arweaveWallet.getActiveAddress();
+
+    const result2 = await deployBundlr(
+      title,
+      description,
+      addr,
+      files[0].type,
+      result.data.id
+    );
+
+    deployDlg = false;
+
+    // reset form
+    document.forms[0].reset();
+
+    tx = result2.id;
+
+    $imgCache = [
+      ...$imgCache,
+      { id: result2.id, src: URL.createObjectURL(files[0]) },
+    ];
     confirmDlg = true;
   }
 </script>
@@ -163,8 +192,8 @@
           <button class="btn btn-block">Deploy</button>
           <button
             type="button"
-            on:click={deployMatic}
-            class="btn btn-block btn-primary">Deploy with $MATIC</button
+            on:click={deploySol}
+            class="btn btn-block btn-primary">Deploy with SOL</button
           >
         </div>
       </form>
