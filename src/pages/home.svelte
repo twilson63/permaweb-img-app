@@ -1,5 +1,5 @@
 <script>
-  //import { providers } from "ethers";
+  import { providers } from "ethers";
   import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
   import { imgCache } from "../store.js";
   import { deploy, deployBundlr } from "../lib/deploy-path.js";
@@ -31,7 +31,75 @@
     });
 
   async function doDeploy(e) {
-    if (currency === "sol") {
+    if (currency === "matic") {
+      if (!window.ethereum) {
+        alert("Metamask is required!");
+        return;
+      }
+      try {
+        deployDlg = true;
+
+        await window.ethereum.enable();
+        const provider = new providers.Web3Provider(window.ethereum);
+        await provider._ready();
+
+        const bundlr = new WebBundlr(
+          "https://node1.bundlr.network",
+          "matic",
+          provider
+        );
+
+        await bundlr.ready();
+
+        // fund account
+        const price = await bundlr.getPrice(files[0].size);
+        const balance = await bundlr.getLoadedBalance();
+
+        if (balance.isLessThan(price)) {
+          await bundlr.fund(price.minus(balance).multipliedBy(1.1).toFixed(0));
+        }
+
+        const trx = await bundlr.createTransaction(
+          await toArrayBuffer(files[0]),
+          {
+            tags: [{ name: "Content-Type", value: files[0].type }],
+          }
+        );
+
+        await trx.sign();
+
+        const result = await trx.upload();
+
+        const addr = await arweaveWallet.getActiveAddress();
+
+        const result2 = await deployBundlr(
+          title,
+          description,
+          addr,
+          files[0].type,
+          result.data.id
+        );
+
+        deployDlg = false;
+
+        // reset form
+        document.forms[0].reset();
+
+        tx = result2.id;
+
+        $imgCache = [
+          ...$imgCache,
+          { id: result2.id, src: URL.createObjectURL(files[0]) },
+        ];
+
+        confirmDlg = true;
+      } catch (e) {
+        console.log(e);
+        deployDlg = false;
+        errorMessage = e.message;
+        errorDlg = true;
+      }
+    } else if (currency === "sol") {
       if (!window.solana) {
         alert("Phantom Wallet is required!");
         return;
@@ -156,13 +224,15 @@
           </div>
         {:else}
           <div class="form-control">
-            <label for="file" class="label">Choose Image</label>
+            <label for="file" class="btn btn-block w-[400px]"
+              >Select Image</label
+            >
             <input
               id="file"
               type="file"
-              class="input input-bordered"
+              class="hidden input input-bordered"
               bind:files
-              accept="image/png, image/jpeg, image/jpg, image/webp, image/svg+xml"
+              accept="image/png, image/jpeg, image/gif, image/jpg, image/webp, image/svg+xml"
               required
             />
           </div>
@@ -198,6 +268,7 @@
           <select class="select select-bordered" bind:value={currency}>
             <option>Choose</option>
             <option value="sol">$SOL</option>
+            <option value="matic">$MATIC</option>
             <option value="ar">$AR</option>
           </select>
         </div>
