@@ -19,9 +19,16 @@ export default defineConfig({
     alias: {
       stream: "stream-browserify",
       crypto: "crypto-browserify",
-      buffer: 'rollup-plugin-node-polyfills/polyfills/buffer-es6', // add buffer
+      assert: "assert",
+      //buffer: 'rollup-plugin-node-polyfills/polyfills/buffer-es6', // add buffer
       process: 'rollup-plugin-node-polyfills/polyfills/process-es6', // add process
-
+      http: "stream-http",
+      https: "https-browserify",
+      os: "os-browserify",
+      url: "url",
+      path: "path-browserify",
+      zlib: "browserify-zlib",
+      tty: "tty-browserify",
     }
   },
   optimizeDeps: {
