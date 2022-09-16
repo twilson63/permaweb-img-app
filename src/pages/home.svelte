@@ -88,7 +88,7 @@
     await provider.connect();
 
     const bundlr = new WebBundlr(
-      "https://node2.bundlr.network",
+      "https://node1.bundlr.network",
       "solana",
       provider
     );
