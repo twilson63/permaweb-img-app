@@ -19,6 +19,7 @@
   let errorDlg = false;
   let confirmDlg = false;
   let tx = "";
+  let currency = "";
 
   const toArrayBuffer = (file) =>
     new Promise((resolve, reject) => {
@@ -30,108 +31,110 @@
     });
 
   async function doDeploy(e) {
-    if (!window.arweaveWallet) {
-      errorMessage = "Arweave Wallet not found!";
-      errorDlg = true;
-      return;
-    }
-    // connnect
-    await arweaveWallet.connect([
-      "ACCESS_ADDRESS",
-      "SIGN_TRANSACTION",
-      "DISPATCH",
-    ]);
-    const addr = await arweaveWallet.getActiveAddress();
-
-    try {
+    if (currency === "sol") {
+      if (!window.solana) {
+        alert("Phantom Wallet is required!");
+        return;
+      }
       deployDlg = true;
-      const data = await toArrayBuffer(files[0]);
-      const result = await deploy(
+      await window.solana.connect();
+      const provider = new PhantomWalletAdapter();
+      await provider.connect();
+
+      const bundlr = new WebBundlr(
+        "https://node1.bundlr.network",
+        "solana",
+        provider
+      );
+      await bundlr.ready();
+      // fund account
+      const price = await bundlr.getPrice(files[0].size);
+      const balance = await bundlr.getLoadedBalance();
+
+      if (balance.isLessThan(price)) {
+        await bundlr.fund(price.minus(balance).multipliedBy(1.1).toFixed(0));
+      }
+
+      const trx = await bundlr.createTransaction(
+        await toArrayBuffer(files[0]),
+        {
+          tags: [{ name: "Content-Type", value: files[0].type }],
+        }
+      );
+
+      await trx.sign();
+
+      const result = await trx.upload();
+
+      const addr = await arweaveWallet.getActiveAddress();
+
+      const result2 = await deployBundlr(
         title,
         description,
         addr,
         files[0].type,
-        data
+        result.data.id
       );
 
       deployDlg = false;
 
       // reset form
-      e.target.reset();
-      // files = [];
-      // title = "";
-      // description = "";
+      document.forms[0].reset();
 
-      tx = result.id;
+      tx = result2.id;
+
       $imgCache = [
         ...$imgCache,
-        { id: tx, src: URL.createObjectURL(files[0]) },
+        { id: result2.id, src: URL.createObjectURL(files[0]) },
       ];
 
       confirmDlg = true;
-    } catch (e) {
-      deployDlg = false;
-      errorMessage = e.message;
-      errorDlg = true;
+    } else {
+      if (!window.arweaveWallet) {
+        errorMessage = "Arweave Wallet not found!";
+        errorDlg = true;
+        return;
+      }
+      // connnect
+      await arweaveWallet.connect([
+        "ACCESS_ADDRESS",
+        "SIGN_TRANSACTION",
+        "DISPATCH",
+      ]);
+      const addr = await arweaveWallet.getActiveAddress();
+
+      try {
+        deployDlg = true;
+        const data = await toArrayBuffer(files[0]);
+        const result = await deploy(
+          title,
+          description,
+          addr,
+          files[0].type,
+          data
+        );
+
+        deployDlg = false;
+
+        // reset form
+        e.target.reset();
+        // files = [];
+        // title = "";
+        // description = "";
+
+        tx = result.id;
+        $imgCache = [
+          ...$imgCache,
+          { id: tx, src: URL.createObjectURL(files[0]) },
+        ];
+
+        confirmDlg = true;
+      } catch (e) {
+        deployDlg = false;
+        errorMessage = e.message;
+        errorDlg = true;
+      }
     }
-  }
-
-  async function deploySol(e) {
-    if (!window.solana) {
-      alert("Phantom Wallet is required!");
-      return;
-    }
-
-    deployDlg = true;
-    await window.solana.connect();
-    const provider = new PhantomWalletAdapter();
-    await provider.connect();
-
-    const bundlr = new WebBundlr(
-      "https://node1.bundlr.network",
-      "solana",
-      provider
-    );
-    await bundlr.ready();
-    // fund account
-    const price = await bundlr.getPrice(files[0].size);
-    const balance = await bundlr.getLoadedBalance();
-
-    if (balance.isLessThan(price)) {
-      await bundlr.fund(price.minus(balance).multipliedBy(1.1).toFixed(0));
-    }
-
-    const trx = await bundlr.createTransaction(await toArrayBuffer(files[0]), {
-      tags: [{ name: "Content-Type", value: files[0].type }],
-    });
-
-    await trx.sign();
-
-    const result = await trx.upload();
-
-    const addr = await arweaveWallet.getActiveAddress();
-
-    const result2 = await deployBundlr(
-      title,
-      description,
-      addr,
-      files[0].type,
-      result.data.id
-    );
-
-    deployDlg = false;
-
-    // reset form
-    document.forms[0].reset();
-
-    tx = result2.id;
-
-    $imgCache = [
-      ...$imgCache,
-      { id: result2.id, src: URL.createObjectURL(files[0]) },
-    ];
-
-    confirmDlg = true;
   }
 </script>
 
@@ -190,13 +193,16 @@
           >
         </div>
         -->
+        <div class="form-control">
+          <label for="currency" class="label">Currency</label>
+          <select class="select select-bordered" bind:value={currency}>
+            <option>Choose</option>
+            <option value="sol">$SOL</option>
+            <option value="ar">$AR</option>
+          </select>
+        </div>
         <div class="mt-16 space-y-4">
           <button class="btn btn-block">Deploy</button>
-          <button
-            type="button"
-            on:click={deploySol}
-            class="btn btn-block btn-primary">Deploy with SOL</button
-          >
         </div>
       </form>
     </div>
