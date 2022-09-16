@@ -5,6 +5,8 @@ import tailwind from 'tailwindcss'
 import tailwindConfig from './tailwind.config.js'
 import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfill";
 import notifier from 'vite-plugin-notifier';
+import rollupNodePolyFill from 'rollup-plugin-node-polyfills'
+
 
 const [schema, host] = process.env.GITPOD_WORKSPACE_URL ? process.env.GITPOD_WORKSPACE_URL.split('://') : [null, null]
 const publicUrl = `3000-${host}`
@@ -17,7 +19,9 @@ export default defineConfig({
     alias: {
       stream: "stream-browserify",
       crypto: "crypto-browserify",
-      assert: 'assert-browserify'
+      buffer: 'rollup-plugin-node-polyfills/polyfills/buffer-es6', // add buffer
+      process: 'rollup-plugin-node-polyfills/polyfills/process-es6', // add process
+
     }
   },
   optimizeDeps: {
@@ -37,7 +41,14 @@ export default defineConfig({
     },
   },
   build: {
-    target: ['esnext']
+    target: ['esnext'],
+    rollupOptions: {
+      plugins: [
+        // Enable rollup polyfills plugin
+        // used during production bundling
+        rollupNodePolyFill()
+      ]
+    }
   },
   server: {
     hmr: {
