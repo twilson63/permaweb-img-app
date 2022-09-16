@@ -17,18 +17,9 @@ export default defineConfig({
   plugins: [svelte(), notifier()],
   resolve: {
     alias: {
-      stream: "stream-browserify",
       crypto: "crypto-browserify",
-      assert: "assert",
-      //buffer: 'rollup-plugin-node-polyfills/polyfills/buffer-es6', // add buffer
-      process: 'rollup-plugin-node-polyfills/polyfills/process-es6', // add process
-      http: "stream-http",
-      https: "https-browserify",
-      os: "os-browserify",
-      url: "url",
-      path: "path-browserify",
-      zlib: "browserify-zlib",
-      tty: "tty-browserify",
+      stream: "rollup-plugin-node-polyfills/polyfills/stream",
+      events: "rollup-plugin-node-polyfills/polyfills/events"
     }
   },
   optimizeDeps: {
