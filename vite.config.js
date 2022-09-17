@@ -19,7 +19,8 @@ export default defineConfig({
     alias: {
       crypto: "crypto-browserify",
       stream: "rollup-plugin-node-polyfills/polyfills/stream",
-      events: "rollup-plugin-node-polyfills/polyfills/events"
+      events: "rollup-plugin-node-polyfills/polyfills/events",
+      '@bundlr-network/client': "@bundlr-network/client/build/web/bundle.js"
     }
   },
   optimizeDeps: {

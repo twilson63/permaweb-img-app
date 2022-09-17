@@ -8,7 +8,8 @@
   import ConfirmDialog from "../dialogs/confirm.svelte";
   import Navbar from "../components/navbar.svelte";
 
-  import { WebBundlr } from "@bundlr-network/client/build/web/index.js";
+  //import { WebBundlr } from "@bundlr-network/client";
+  const WebBundlr = Bundlr.default;
 
   let files = [];
   let title = "";
