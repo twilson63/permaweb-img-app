@@ -36,6 +36,7 @@ query {
       path(['data', 'transactions', 'edges'])
 
     ))
+
 }
 
 export async function getAssetData(id) {
@@ -80,7 +81,7 @@ function transformTx(node) {
     type: prop('value', find(propEq('name', 'Type'), node.tags)),
     description: prop('value', find(propEq('name', 'Description'), node.tags)),
     owner: node.owner.address,
-    timestamp: node.block.timestamp
+    timestamp: node?.block?.timestamp || Date.now() / 1000
   })
 
 }
