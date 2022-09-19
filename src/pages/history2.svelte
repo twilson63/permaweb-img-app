@@ -1,12 +1,19 @@
 <script>
   import Navbar from "../components/navbar.svelte";
-  import { imagesByOwner, transfer } from "../lib/asset.js";
+  import {
+    imagesByOwner,
+    transfer,
+    excludeTransferred,
+    includeTransferred,
+  } from "../lib/asset.js";
   import { getCount } from "../lib/stamp.js";
   import Transfer from "../dialogs/transfer.svelte";
   import ConnectModal from "../dialogs/connect.svelte";
   import WalletHelp from "../dialogs/wallet-help.svelte";
   import Transfering from "../dialogs/transfering.svelte";
   import ErrorDialog from "../dialogs/error.svelte";
+  import { profile } from "../store.js";
+  import { reject, concat } from "ramda";
 
   import formatDistance from "date-fns/formatDistance";
 
@@ -43,24 +50,44 @@
   }
 
   async function handleTransfer(e) {
+    if (!$profile.addr) {
+      showConnect = true;
+      return;
+    }
+
     showTransfer = false;
     showTransfering = true;
     transferData = e.detail;
 
-    const result = await transfer(
-      transferData.id,
-      transferData.addr,
-      transferData.percent
-    );
+    const result = await transfer({
+      asset: transferData.id,
+      title: transferData.title,
+      caller: $profile.addr,
+      addr: transferData.addr,
+      percent: transferData.percent,
+    });
+
     if (result.ok) {
       showTransfering = false;
       transferData = { id: "0", title: "unknown" };
+      images = getImages(addr);
     } else {
       showTransfering = false;
+      transferData = { id: "0", title: "unknown" };
       errorMessage = result.message;
       showError = true;
     }
   }
+
+  async function getImages(addr) {
+    const transferredImages = await excludeTransferred(addr);
+    return Promise.all([imagesByOwner(addr), includeTransferred(addr)])
+      .then((results) => concat(results[0], results[1]))
+      .then((x) => (console.log(x), x))
+      .then(reject((a) => transferredImages[a.id] === 100));
+  }
+
+  let images = getImages(addr);
 </script>
 
 <Navbar on:connect={() => (showConnect = true)} />
@@ -69,7 +96,7 @@
     <h1 class="text-3xl">History</h1>
   </header>
   <section>
-    {#await imagesByOwner(addr) then images}
+    {#await images then images}
       {#each images as img}
         <div class="flex space-x-4 items-center my-8">
           <div class="w-[140px] flex justify-center">

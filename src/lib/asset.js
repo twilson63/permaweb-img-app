@@ -1,9 +1,9 @@
-import { compose, prop, propEq, find, map, pluck, path } from 'ramda'
+import { compose, prop, propEq, find, map, pluck, path, reduce } from 'ramda'
 import { WarpFactory } from 'warp-contracts/web'
 
 const warp = WarpFactory.forMainnet()
 
-export async function transfer(asset, caller, addr, percent) {
+export async function transfer({ asset, title, caller, addr, percent }) {
 
   const contract = warp.contract(asset).connect('use_wallet').setEvaluationOptions({
     internalWrites: true
@@ -27,7 +27,8 @@ export async function transfer(asset, caller, addr, percent) {
         tags: [
           { name: 'Transferred-From', value: caller },
           { name: 'Transferred-To', value: addr },
-          { name: 'Transferred-Percent', value: percent }
+          { name: 'Transferred-Percent', value: percent },
+          { name: 'Title', value: title }
         ]
       })
 
@@ -56,6 +57,83 @@ export async function transfer(asset, caller, addr, percent) {
 
   return { ok: true }
 
+}
+
+export async function includeTransferred(addr) {
+  // lxZ38bR9ABqIDINHuHlJI7o5aYQeJeSlYOz3UWBoMao
+  return fetch('https://arweave.net/graphql', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      query: `
+query {
+  transactions(first: 100, tags: {name: "Transferred-To", values: ["${addr}"]}) {
+    edges {
+      node {
+        id
+        tags {
+          name 
+          value
+        }
+      }
+    }
+  }
+}
+      `
+    })
+  }).then(res => res.ok ? res.json() : Promise.reject(new Error('ERROR: STATUS ' + res.status)))
+    .then(compose(
+      map(txToAssetInfo),
+      pluck('node'),
+      path(['data', 'transactions', 'edges'])
+
+    ))
+}
+
+export async function excludeTransferred(addr) {
+  return fetch('https://arweave.net/graphql', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      query: `
+query {
+  transactions(first: 100, tags: {name: "Transferred-From", values: ["${addr}"]}) {
+    edges {
+      node {
+        id
+        tags {
+          name 
+          value
+        }
+        block {
+          timestamp
+        }
+      }
+    }
+  }
+}
+      `
+    })
+  }).then(res => res.ok ? res.json() : Promise.reject(new Error('ERROR: STATUS ' + res.status)))
+    .then(compose(
+      map(txToAssetInfo),
+      pluck('node'),
+      path(['data', 'transactions', 'edges'])
+
+    ))
+    .then(reduce((data, asset) => {
+      if (data[asset.id]) {
+        data[asset.id] += Number(asset.percent)
+      } else {
+        data[asset.id] = Number(asset.percent)
+      }
+      return data
+    }, {}))
+    .then(x => (console.log('exclude', x), x))
 }
 
 export async function imagesByOwner(addr) {
@@ -141,4 +219,19 @@ function transformTx(node) {
     timestamp: node?.block?.timestamp || Date.now() / 1000
   })
 
+}
+
+
+function txToAssetInfo(node) {
+  const getTag = name => prop('value', find(propEq('name', name), node.tags))
+
+  return ({
+    id: getTag('Contract'),
+    percent: getTag('Transferred-Percent'),
+    owner: getTag('Transferred-To'),
+    type: 'image',
+    description: '',
+    title: getTag('Title') || 'Unknown',
+    timestamp: node?.block?.timestamp || Date.now() / 1000
+  })
 }

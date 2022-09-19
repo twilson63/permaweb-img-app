@@ -50,7 +50,10 @@
             placeholder="Send a percentage of ownership"
             bind:value={percent}
           />
-          <button class="btn bg-gray-400 border-gray-400 font-light">Max</button
+          <button
+            type="button"
+            class="btn bg-gray-400 border-gray-400 font-light"
+            on:click={() => (percent = 100)}>Max</button
           >
         </div>
       </div>
