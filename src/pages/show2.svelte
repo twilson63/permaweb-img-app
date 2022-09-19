@@ -71,9 +71,16 @@
     tryingToStamp = false;
     stampDlg = true;
     const addr = await window.arweaveWallet.getActiveAddress();
+    console.log(addr);
     isVouched(addr)
       .then((res) =>
-        res ? stamp(id) : Promise.reject(new Error("could not stamp asset"))
+        res
+          ? stamp(id)
+          : Promise.reject(
+              new Error(
+                "Could not stamp asset, make sure you are Verified by a Vouch Service, <a target='_blank' class='link' href='https://vouchdao.xyz'>https://vouchdao.xyz</a>"
+              )
+            )
       )
       .then((res) => {
         assetCount = getCount(id);
@@ -108,7 +115,7 @@
   <meta property="og:url" content="{location.origin}/#/show/{id}" />
 </svelte:head>
 
-<Navbar />
+<Navbar on:connect={() => (showConnect = true)} />
 {#await getAssetData(id) then asset}
   <main>
     <section class="hero min-h-screen bg-base-100">

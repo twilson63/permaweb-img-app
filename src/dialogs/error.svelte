@@ -13,6 +13,6 @@
     class="m-4 border-4 border-error pb-8 px-2 flex flex-col items-center justify-center"
   >
     <h3 class="mb-8 text-3xl bg-error text-white p-2 mt-4">Error!</h3>
-    <p class="text-xl">{msg}</p>
+    <p class="text-xl">{@html msg}</p>
   </div>
 </Modal>
