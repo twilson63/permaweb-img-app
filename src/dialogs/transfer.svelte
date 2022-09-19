@@ -7,7 +7,19 @@
   export let title;
   export let id;
 
+  let sendTo = "";
+  let percent = 0;
+
   const dispatch = createEventDispatcher();
+
+  async function handleSubmit(e) {
+    dispatch("transfer", {
+      id,
+      title,
+      addr: sendTo,
+      percent,
+    });
+  }
 </script>
 
 <Modal
@@ -23,24 +35,31 @@
       Set your transfer details for:
     </h2>
     <p class="text-xl  text-[#160042]">{title} ({take(5, id)})</p>
-    <div class="form-control">
-      <input class="input input-bordered" placeholder="Send to address..." />
-    </div>
-    <div class="form-control">
-      <div class="flex space-x-2">
+    <form class="form space-y-8" on:submit|preventDefault={handleSubmit}>
+      <div class="form-control">
         <input
           class="input input-bordered"
-          placeholder="Send a percentage of ownership"
+          placeholder="Send to address..."
+          bind:value={sendTo}
         />
-        <button class="btn bg-gray-400 border-gray-400 font-light">Max</button>
       </div>
-    </div>
-    <p class="text-[14px] font-light">Arweave Fee: 0.00</p>
-    <p class="text-[14px] font-light">Total: 0.00</p>
-    <button
-      class="btn btn-block rounded-full hover:bg-gray-400"
-      on:click={() => null}>Confirm & Transfer</button
-    >
+      <div class="form-control">
+        <div class="flex space-x-2">
+          <input
+            class="input input-bordered"
+            placeholder="Send a percentage of ownership"
+            bind:value={percent}
+          />
+          <button class="btn bg-gray-400 border-gray-400 font-light">Max</button
+          >
+        </div>
+      </div>
+      <p class="text-[14px] font-light">Arweave Fee: 0.00</p>
+      <p class="text-[14px] font-light">Total: 0.00</p>
+      <button class="btn btn-block rounded-full hover:bg-gray-400"
+        >Confirm & Transfer</button
+      >
+    </form>
 
     <button
       on:click={() => {

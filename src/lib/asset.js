@@ -3,18 +3,58 @@ import { WarpFactory } from 'warp-contracts/web'
 
 const warp = WarpFactory.forMainnet()
 
-export async function transfer(asset, addr, percent) {
+export async function transfer(asset, caller, addr, percent) {
+
   const contract = warp.contract(asset).connect('use_wallet').setEvaluationOptions({
     internalWrites: true
   })
 
-  const result = await contract.readState()
-  console.log(result)
-  // get balance for address
-  // calculate percentage
-  // write Interaction transfer
-  // include Tag to indicate transfer address
-  // confirm transfer with readState
+  const res = await contract.viewState({
+    function: 'balance'
+  })
+
+  if (res.type === "ok" && addr.length === 43) {
+    if (res.result.balance > 0) {
+      // calculate percent
+      let bal = res.result.balance
+      let qty = Math.floor(bal * (percent / 100))
+
+      await contract.writeInteraction({
+        function: 'transfer',
+        target: addr,
+        qty
+      }, {
+        tags: [
+          { name: 'Transferred-From', value: caller },
+          { name: 'Transferred-To', value: addr },
+          { name: 'Transferred-Percent', value: percent }
+        ]
+      })
+
+      const txCheck = await contract.viewState({
+        function: 'balance',
+        target: addr
+      })
+
+      if (txCheck.type === 'ok') {
+        if (txCheck.result.balance >= qty) {
+          return { ok: true }
+        }
+      } else {
+        return {
+          ok: false,
+          message: 'Could not confirm balance transfer!'
+        }
+      }
+    }
+  } else {
+    return {
+      ok: false,
+      message: `Could not get balance or "recipient address" ${addr} is not valid!`
+    }
+  }
+
+  return { ok: true }
 
 }
 

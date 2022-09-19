@@ -1,7 +1,14 @@
 <script>
+  import { createEventDispatcher } from "svelte";
   import { profile } from "../store.js";
 
+  const dispatch = createEventDispatcher();
+
   const addr = $profile ? $profile.addr : "";
+
+  function handleConnect() {
+    dispatch("connect");
+  }
 </script>
 
 <div class="navbar bg-base-100">
@@ -43,7 +50,7 @@
       <a href="/hx/{addr}" class="btn btn-ghost">My Imgs</a>
       <a href="/about" class="btn btn-ghost">About</a>
     {:else}
-      <a href="/" class="btn btn-ghost">Connect</a>
+      <button on:click={handleConnect} class="btn btn-ghost">Connect</button>
     {/if}
   </div>
 </div>

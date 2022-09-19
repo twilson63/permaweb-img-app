@@ -1,8 +1,13 @@
 <script>
   import Navbar from "../components/navbar.svelte";
-  import { imagesByOwner } from "../lib/asset.js";
+  import { imagesByOwner, transfer } from "../lib/asset.js";
   import { getCount } from "../lib/stamp.js";
   import Transfer from "../dialogs/transfer.svelte";
+  import ConnectModal from "../dialogs/connect.svelte";
+  import WalletHelp from "../dialogs/wallet-help.svelte";
+  import Transfering from "../dialogs/transfering.svelte";
+  import ErrorDialog from "../dialogs/error.svelte";
+
   import formatDistance from "date-fns/formatDistance";
 
   export let addr;
@@ -10,6 +15,13 @@
   let items = {};
   let showTransfer = false;
   let transferData = { id: "0", title: "unknown" };
+
+  let showConnect = false;
+  let showHelp = false;
+  let canTransfer = false;
+  let showTransfering = false;
+  let showError = false;
+  let errorMessage = "An Error Occuried!";
 
   function handleCopy(id) {
     items[id] = false;
@@ -25,9 +37,33 @@
       "🪧 STAMP\n\n" + title.replace("#", "no ") + "\n\n🐘"
     )}&url=https://img.arweave.dev/%23/show/${id}`;
   }
+
+  function connected() {
+    canTransfer = true;
+  }
+
+  async function handleTransfer(e) {
+    showTransfer = false;
+    showTransfering = true;
+    transferData = e.detail;
+
+    const result = await transfer(
+      transferData.id,
+      transferData.addr,
+      transferData.percent
+    );
+    if (result.ok) {
+      showTransfering = false;
+      transferData = { id: "0", title: "unknown" };
+    } else {
+      showTransfering = false;
+      errorMessage = result.message;
+      showError = true;
+    }
+  }
 </script>
 
-<Navbar />
+<Navbar on:connect={() => (showConnect = true)} />
 <main class="px-8 max-w-screen">
   <header class="my-16">
     <h1 class="text-3xl">History</h1>
@@ -123,4 +159,21 @@
     {/await}
   </section>
 </main>
-<Transfer bind:open={showTransfer} {...transferData} />
+<Transfer
+  bind:open={showTransfer}
+  {...transferData}
+  on:transfer={handleTransfer}
+/>
+<ConnectModal
+  bind:open={showConnect}
+  on:connected={connected}
+  on:help={() => (showHelp = true)}
+/>
+<WalletHelp bind:open={showHelp} />
+<Transfering
+  bind:open={showTransfering}
+  addr={transferData.addr}
+  percent={transferData.percent}
+  title={transferData.title}
+/>
+<ErrorDialog bind:open={showError} msg={errorMessage} />
