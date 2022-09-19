@@ -2,6 +2,7 @@
   import { createEventDispatcher } from "svelte";
   import Modal from "../components/modal.svelte";
   import { take } from "ramda";
+  import { accountByANS } from "../lib/account.js";
 
   export let open;
   export let title;
@@ -9,6 +10,7 @@
 
   let sendTo = "";
   let percent = 0;
+  let message = null;
 
   const dispatch = createEventDispatcher();
 
@@ -19,6 +21,16 @@
       addr: sendTo,
       percent,
     });
+  }
+
+  async function findByANS() {
+    message = null;
+    if (sendTo.length < 43 && sendTo.includes(".ar")) {
+      let user = await accountByANS(sendTo);
+      sendTo = user.user;
+      return;
+    }
+    message = "and name must have .ar ext";
   }
 </script>
 
@@ -42,6 +54,12 @@
           placeholder="Send to address..."
           bind:value={sendTo}
         />
+        {#if message}
+          <label class="label text-error">{message}</label>
+        {/if}
+        <button type="button" class="mt-4 link" on:click={findByANS}
+          >Find by ANS</button
+        >
       </div>
       <div class="form-control">
         <div class="flex space-x-2">

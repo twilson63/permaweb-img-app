@@ -58,23 +58,28 @@
     showTransfer = false;
     showTransfering = true;
     transferData = e.detail;
+    try {
+      const result = await transfer({
+        asset: transferData.id,
+        title: transferData.title,
+        caller: $profile.addr,
+        addr: transferData.addr,
+        percent: transferData.percent,
+      });
 
-    const result = await transfer({
-      asset: transferData.id,
-      title: transferData.title,
-      caller: $profile.addr,
-      addr: transferData.addr,
-      percent: transferData.percent,
-    });
-
-    if (result.ok) {
+      if (result.ok) {
+        showTransfering = false;
+        transferData = { id: "0", title: "unknown" };
+        images = getImages(addr);
+      } else {
+        showTransfering = false;
+        transferData = { id: "0", title: "unknown" };
+        errorMessage = result.message;
+        showError = true;
+      }
+    } catch (e) {
       showTransfering = false;
-      transferData = { id: "0", title: "unknown" };
-      images = getImages(addr);
-    } else {
-      showTransfering = false;
-      transferData = { id: "0", title: "unknown" };
-      errorMessage = result.message;
+      errorMessage = e.message;
       showError = true;
     }
   }
