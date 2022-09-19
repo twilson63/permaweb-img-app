@@ -7,7 +7,7 @@
   import Home from "./pages/home.svelte";
   import About from "./pages/about.svelte";
   import Show from "./pages/show2.svelte";
-  import History from "./pages/history.svelte";
+  import History from "./pages/history2.svelte";
 
   import { profile } from "./store.js";
 

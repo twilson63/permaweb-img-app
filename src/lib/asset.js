@@ -1,5 +1,22 @@
 import { compose, prop, propEq, find, map, pluck, path } from 'ramda'
+import { WarpFactory } from 'warp-contracts/web'
 
+const warp = WarpFactory.forMainnet()
+
+export async function transfer(asset, addr, percent) {
+  const contract = warp.contract(asset).connect('use_wallet').setEvaluationOptions({
+    internalWrites: true
+  })
+
+  const result = await contract.readState()
+  console.log(result)
+  // get balance for address
+  // calculate percentage
+  // write Interaction transfer
+  // include Tag to indicate transfer address
+  // confirm transfer with readState
+
+}
 
 export async function imagesByOwner(addr) {
   return fetch('https://arweave.net/graphql', {
