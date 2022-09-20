@@ -156,7 +156,7 @@
             <p class="text-[18px] font-light flex justify-center">
               <a target="_blank" href={tweetLink(img.title, img.id)}>
                 <img
-                  class="h-[24px] w-[24px]"
+                  class="h-[24px] w-[24px] dark:invert"
                   src="assets/share.svg"
                   alt="share"
                 />
@@ -168,7 +168,7 @@
             <p class="text-[18px] font-light flex justify-center">
               <a href="/show/{img.id}">
                 <img
-                  class="h-[24px] w-[24px]"
+                  class="h-[24px] w-[24px] dark:invert"
                   src="assets/view.svg"
                   alt="view"
                 />
@@ -183,7 +183,7 @@
                   transferData = { id: img.id, title: img.title };
                   showTransfer = true;
                 }}
-                class="h-[24px] w-[24px]"
+                class="h-[24px] w-[24px] dark:invert"
                 src="assets/transfer.svg"
                 alt="transfer"
               />
