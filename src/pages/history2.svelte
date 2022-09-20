@@ -13,7 +13,7 @@
   import Transfering from "../dialogs/transfering.svelte";
   import ErrorDialog from "../dialogs/error.svelte";
   import { profile } from "../store.js";
-  import { reject, concat } from "ramda";
+  import { reject, concat, sortWith, descend, prop } from "ramda";
 
   import formatDistance from "date-fns/formatDistance";
 
@@ -86,10 +86,13 @@
 
   async function getImages(addr) {
     const transferredImages = await excludeTransferred(addr);
-    return Promise.all([imagesByOwner(addr), includeTransferred(addr)])
-      .then((results) => concat(results[0], results[1]))
-      .then((x) => (console.log(x), x))
-      .then(reject((a) => transferredImages[a.id] === 100));
+    return (
+      Promise.all([imagesByOwner(addr), includeTransferred(addr)])
+        .then((results) => concat(results[0], results[1]))
+        .then(reject((a) => transferredImages[a.id] === 100))
+        // sort!
+        .then(sortWith([descend(prop("timestamp"))]))
+    );
   }
 
   let images = getImages(addr);
