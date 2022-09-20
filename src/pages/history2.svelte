@@ -5,6 +5,7 @@
     transfer,
     excludeTransferred,
     includeTransferred,
+    assetDetails,
   } from "../lib/asset.js";
   import { getCount } from "../lib/stamp.js";
   import Transfer from "../dialogs/transfer.svelte";
@@ -13,7 +14,7 @@
   import Transfering from "../dialogs/transfering.svelte";
   import ErrorDialog from "../dialogs/error.svelte";
   import { profile } from "../store.js";
-  import { reject, concat, sortWith, descend, prop } from "ramda";
+  import { reject, concat, sortWith, descend, prop, takeLast } from "ramda";
 
   import formatDistance from "date-fns/formatDistance";
 
@@ -105,7 +106,145 @@
   </header>
   <section>
     {#await images then images}
-      {#each images as img}
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="text-center">Preview</th>
+            <th>Title</th>
+            <th>Stamps</th>
+            <th>Transaction ID</th>
+            <th>Ownership</th>
+            <th>Creator</th>
+            <th>Share</th>
+            <th>View</th>
+            <th>Transfer</th>
+          </tr>
+        </thead>
+        <tbody>
+          {#each images as img}
+            <tr>
+              <td>
+                <div class="w-[140px] flex justify-center">
+                  <img
+                    class="h-[75px]"
+                    src="https://arweave.net/{img.id}"
+                    alt={img.title}
+                  />
+                </div>
+              </td>
+              <td>
+                <div class="flex flex-col w-[300px]">
+                  <h3 class="text-[18px] font-bold">{img.title}</h3>
+                  <p class="text-[18px] font-light">
+                    Last update:
+                    {formatDistance(
+                      new Date(img.timestamp * 1000),
+                      new Date(),
+                      {
+                        addSuffix: true,
+                      }
+                    )}
+                  </p>
+                </div>
+              </td>
+              <td>
+                <h3 class="text-[18px] font-bold">&nbsp;</h3>
+                <p class="text-[18px] font-light flex space-x-2">
+                  {#await getCount(img.id) then count}
+                    <div>{count}</div>
+                  {/await}
+                  <img
+                    class="ml-2 h-[24px] w-[24px]"
+                    src="assets/stamp2.svg"
+                    alt="stamp logo"
+                  />
+                </p>
+              </td>
+              <td>
+                <h3 class="text-[18px] font-bold">&nbsp;</h3>
+                <p class="text-[18px] font-light flex space-x-2 items-center">
+                  ...{takeLast(5, img.id)}
+                  <img
+                    on:click={handleCopy(img.id)}
+                    class="ml-2 h-[17px] w-[17px]"
+                    src="assets/copy.svg"
+                    alt="copy"
+                  />
+                  {#if items[img.id]}
+                    <span class="text-primary">copied!</span>
+                  {/if}
+                </p>
+              </td>
+              {#await assetDetails(img.id, addr)}
+                <td>
+                  <h3 class="text-[18px] font-bold">&nbsp;</h3>
+                  <p class="text-[18px] font-light">100%</p>
+                </td>
+                <td>
+                  <h3 class="text-[18px] font-bold">&nbsp;</h3>
+                  <p class="text-[18px] font-light">...</p>
+                </td>
+              {:then details}
+                <td>
+                  <h3 class="text-[18px] font-bold">&nbsp;</h3>
+                  <p class="text-[18px] font-light">{details.percent} %</p>
+                </td>
+                <td>
+                  <h3 class="text-[18px] font-bold">&nbsp;</h3>
+                  <p class="text-[18px] font-light">
+                    {details.handle}
+                  </p>
+                </td>
+              {:catch error}
+                <td>
+                  <h3 class="text-[18px] font-bold">&nbsp;</h3>
+                  <p class="text-[18px] font-light">0 %</p>
+                </td>
+                <td>
+                  <h3 class="text-[18px] font-bold">&nbsp;</h3>
+                  <p class="text-[18px] font-light">@unknown</p>
+                </td>
+              {/await}
+              <td>
+                <h3 class="text-[18px] font-bold">&nbsp;</h3>
+                <p class="text-[18px] font-light flex justify-center">
+                  <a target="_blank" href={tweetLink(img.title, img.id)}>
+                    <img
+                      class="h-[24px] w-[24px] dark:invert"
+                      src="assets/share.svg"
+                      alt="share"
+                    />
+                  </a>
+                </p>
+              </td>
+              <td>
+                <h3 class="text-[18px] font-bold">&nbsp;</h3>
+                <p class="text-[18px] font-light flex justify-center">
+                  <a href="/show/{img.id}">
+                    <img
+                      class="h-[24px] w-[24px] dark:invert"
+                      src="assets/view.svg"
+                      alt="view"
+                    />
+                  </a>
+                </p>
+              </td>
+              <td>
+                <h3 class="text-[18px] font-bold">&nbsp;</h3>
+                <p class="text-[18px] font-light flex justify-center">
+                  <img
+                    on:click={() => {
+                      transferData = { id: img.id, title: img.title };
+                      showTransfer = true;
+                    }}
+                    class="h-[24px] w-[24px] dark:invert"
+                    src="assets/transfer.svg"
+                    alt="transfer"
+                  />
+                </p>
+              </td>
+            </tr>
+            <!--
         <div class="flex space-x-4 items-center my-8">
           <div class="w-[140px] flex justify-center">
             <img
@@ -190,7 +329,10 @@
             </p>
           </div>
         </div>
-      {/each}
+        -->
+          {/each}
+        </tbody>
+      </table>
     {/await}
   </section>
 </main>

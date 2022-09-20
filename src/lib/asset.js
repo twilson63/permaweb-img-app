@@ -1,7 +1,33 @@
-import { compose, prop, propEq, find, map, pluck, path, reduce } from 'ramda'
+import { compose, prop, propEq, find, map, pluck, path, reduce, values } from 'ramda'
 import { WarpFactory } from 'warp-contracts/web'
+import Account from 'arweave-account'
 
+const account = new Account({
+  cacheIsActivated: true,
+  cacheSize: 100,
+  cacheTime: 60
+})
 const warp = WarpFactory.forMainnet()
+
+export async function assetDetails(asset, addr) {
+  const state = await fetch('https://cache.permapages.app/' + asset)
+    .then(res => res.ok ? res.json() : Promise.reject(new Error('could not find asset state!')))
+  try {
+    const balances = state.balances
+    const totalBalance = reduce((a, b) => a + b, 0, values(balances))
+    const addrBalance = balances[addr]
+    const percentOwned = Math.floor(addrBalance / totalBalance * 100)
+    const a = await account.get(state.emergencyHaltWallet)
+
+    return {
+      percent: percentOwned,
+      handle: '@' + a.profile.handleName
+    }
+  } catch (e) {
+    console.log(e)
+  }
+
+}
 
 export async function transfer({ asset, title, caller, addr, percent }) {
 
