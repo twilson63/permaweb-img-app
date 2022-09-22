@@ -78,7 +78,8 @@
           description,
           addr,
           files[0].type,
-          result.data.id
+          result.data.id,
+          topics
         );
 
         deployDlg = false;
@@ -142,7 +143,8 @@
         description,
         addr,
         files[0].type,
-        result.data.id
+        result.data.id,
+        topics
       );
 
       deployDlg = false;
@@ -180,7 +182,8 @@
           description,
           addr,
           files[0].type,
-          data
+          data,
+          topics
         );
 
         deployDlg = false;
@@ -205,76 +208,107 @@
       }
     }
   }
+
+  $: notValid = !(
+    files.length > 0 &&
+    ["matic", "sol", "ar"].includes(currency) &&
+    title !== ""
+  );
 </script>
 
 <Navbar />
 <main>
   <section class="hero min-h-screen bg-base-100">
-    <div class="hero-content flex-col">
-      <h1 class="text-8xl font-bold">img</h1>
+    <div class="flex flex-col items-center justify-start">
+      <h1 class="text-6xl font-bold">img</h1>
       <p>Upload</p>
-      <form class="form" on:submit|preventDefault={doDeploy}>
-        {#if files[0]}
-          <img
-            class="border-2 border-secondary w-[500px]"
-            src={URL.createObjectURL(files[0])}
-            alt="img"
-          />
-          <div class="mt-2 flex justify-end">
-            <button on:click={() => (files = [])} class="link">clear</button>
+      <p class="p-8 w-[600px] bg-whitesmoke-200 text-gray-500 text-sm">
+        When uploading images, it is important to note that you are storing
+        these images on a permanent blockchain and by uploading you are
+        indicating that you have permission to do so. NSFW content is not
+        permitted on this service.
+      </p>
+      <form class="form mt-16" on:submit|preventDefault={doDeploy}>
+        <div class="flex flex-col md:flex-row space-x-16 justify-center">
+          <div>
+            {#if files[0]}
+              <img
+                class="border-2 border-secondary w-[500px]"
+                src={URL.createObjectURL(files[0])}
+                alt="img"
+              />
+              <div class="mt-2 flex justify-end">
+                <button on:click={() => (files = [])} class="link">clear</button
+                >
+              </div>
+            {:else}
+              <div class="form-control">
+                <label
+                  for="file"
+                  class="bg-gray-200 h-[350px] w-[500px] grid place-items-center rounded-xl hover:shadow-xl"
+                >
+                  <div>
+                    <span class="text-gray-400">Select Image</span>
+                    <img src="assets/image.svg" alt="image-icon" />
+                  </div>
+                </label>
+                <input
+                  id="file"
+                  type="file"
+                  class="hidden input input-bordered"
+                  bind:files
+                  accept="image/png, image/jpeg, image/gif, image/jpg, image/webp, image/svg+xml"
+                  required
+                />
+              </div>
+            {/if}
           </div>
-        {:else}
-          <div class="form-control">
-            <label for="file" class="btn btn-block w-[400px]"
-              >Select Image</label
-            >
-            <input
-              id="file"
-              type="file"
-              class="hidden input input-bordered"
-              bind:files
-              accept="image/png, image/jpeg, image/gif, image/jpg, image/webp, image/svg+xml"
-              required
-            />
+          <div>
+            <div class="form-control">
+              <label for="title" class="label" required>Title *</label>
+              <input
+                id="title"
+                class="input input-bordered"
+                bind:value={title}
+                required
+              />
+            </div>
+            <div class="form-control">
+              <label for="desc" class="label">Description</label>
+              <textarea
+                id="desc"
+                class="textarea textarea-bordered"
+                bind:value={description}
+              />
+            </div>
+            <div class="form-control">
+              <label for="topics" class="label">Topics</label>
+              <input
+                id="topics"
+                class="input input-bordered"
+                bind:value={topics}
+              />
+              <label class="label text-sm text-gray-400"
+                >Enter a comma-separated list topics (e.g. collection, category,
+                etc)</label
+              >
+            </div>
+            <div class="form-control">
+              <label for="currency" class="label">Currency *</label>
+              <select class="select select-bordered" bind:value={currency}>
+                <option value="none">Choose</option>
+                <option value="sol">$SOL</option>
+                <option value="matic">$MATIC</option>
+                <option value="ar">$AR</option>
+              </select>
+              <label class="label text-sm text-gray-400"
+                >(when using $AR you also mint $BAR)</label
+              >
+            </div>
+            <div class="mt-16 space-y-4">
+              <button disabled={notValid} class="btn btn-block">Deploy</button>
+            </div>
           </div>
-        {/if}
-        <div class="form-control">
-          <label for="title" class="label" required>Title</label>
-          <input
-            id="title"
-            class="input input-bordered"
-            bind:value={title}
-            required
-          />
-        </div>
-        <div class="form-control">
-          <label for="desc" class="label">Description</label>
-          <input
-            id="desc"
-            class="input input-bordered"
-            bind:value={description}
-          />
-        </div>
-        <!--
-        <div class="form-control">
-          <label for="topics" class="label">Topics</label>
-          <input id="topics" class="input input-bordered" bind:value={topics} />
-          <label class="label"
-            >Enter a comma-separated set of topics to describe this image</label
-          >
-        </div>
-        -->
-        <div class="form-control">
-          <label for="currency" class="label">Currency</label>
-          <select class="select select-bordered" bind:value={currency}>
-            <option>Choose</option>
-            <option value="sol">$SOL</option>
-            <option value="matic">$MATIC</option>
-            <option value="ar">$AR</option>
-          </select>
-        </div>
-        <div class="mt-16 space-y-4">
-          <button class="btn btn-block">Deploy</button>
         </div>
       </form>
     </div>

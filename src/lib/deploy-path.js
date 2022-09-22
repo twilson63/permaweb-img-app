@@ -1,23 +1,24 @@
-import { compose, toLower, join, split } from 'ramda'
+import { compose, toLower, join, split, map, trim } from 'ramda'
 const arweave = Arweave.init({
   host: 'arweave.net',
   port: 443,
   protocol: 'https'
 })
 
+const BAR = 'mMffEC07TyoAFAI_O6q_nskj2bT8n4UFvckQ3yELeic'
+
 /*
  * Need to upload to arweave using post
  * Then create a path manifest to upload to
  * both sequencer and bundlr
  */
-
 const SRC = 'BzNLxND_nJEMfcLWShyhU4i9BnzEWaATo6FYFsfsO0Q'
 const URL = 'https://d1o5nlqr4okus2.cloudfront.net/gateway/contracts/deploy'
 //const of = Promise.resolve
 const slugify = compose(toLower, join('-'), split(' '))
 
-export async function deploy(name, description, addr, contentType, data) {
-  return Promise.resolve({ name, description, addr, contentType, data })
+export async function deploy(name, description, addr, contentType, data, topics = "") {
+  return Promise.resolve({ name, description, addr, contentType, data, topics })
     // upload to arweave
     .then(upload)
     // dispatch to bundlr
@@ -26,8 +27,8 @@ export async function deploy(name, description, addr, contentType, data) {
     .then(post)
 }
 
-export async function deployBundlr(name, description, addr, contentType, assetId) {
-  return Promise.resolve({ name, description, addr, contentType, assetId })
+export async function deployBundlr(name, description, addr, contentType, assetId, topics = "") {
+  return Promise.resolve({ name, description, addr, contentType, assetId, topics })
     .then(dispatch)
     .then(post)
 }
@@ -90,6 +91,11 @@ async function createAndTag(ctx) {
   tx.addTag('Title', ctx.name)
   tx.addTag('Description', ctx.description)
   tx.addTag('Type', 'image')
+
+  map(trim, split(',', ctx.topics)).forEach(t => {
+    tx.addTag('Topic:' + t, t)
+  })
+
   return tx
 }
 
@@ -97,14 +103,13 @@ async function upload(ctx) {
   const tx = await arweave.createTransaction({ data: ctx.data })
   tx.addTag('Content-Type', ctx.contentType)
   // earn bar while you upload
-  /*
   tx.addTag('Protocol-Name', 'BAR')
   tx.addTag('Action', 'Burn')
   tx.addTag('App-Name', 'SmartWeaveAction')
   tx.addTag('App-Version', '0.3.0')
   tx.addTag('Input', JSON.stringify({ function: 'mint' }))
-  tx.addTag('Contract', 'JnPMxlTvHtdMsEHgTJrhYvoBL33f_-FfNPt6a9qhaF4')
-  */
+  tx.addTag('Contract', BAR)
+
   await arweave.transactions.sign(tx)
   await arweave.transactions.post(tx)
   return { ...ctx, assetId: tx.id }
