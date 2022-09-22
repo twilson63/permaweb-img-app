@@ -1,4 +1,4 @@
-import { compose, prop, propEq, find, map, pluck, path, reduce, values } from 'ramda'
+import { compose, prop, propEq, find, map, pluck, path, reduce, values, filter } from 'ramda'
 import { WarpFactory } from 'warp-contracts/web'
 import Account from 'arweave-account'
 
@@ -212,6 +212,7 @@ export async function getAssetData(id) {
       title: prop('value', find(propEq('name', 'Title'), data.transaction.tags)),
       description: prop('value', find(propEq('name', 'Description'), data.transaction.tags)),
       type: prop('value', find(propEq('name', 'Type'), data.transaction.tags)),
+      topics: pluck('value', filter(t => t.name.includes('Topic:'), data.transaction.tags)),
       owner: data.transaction.owner.address
     }))
   //.then(_ => ({ title: 'Test', description: 'Description' }))

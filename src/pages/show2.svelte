@@ -147,6 +147,9 @@
             >
           </div>
           <p class="text-xl">{asset.description}</p>
+          {#if asset.topics.length > 0}
+            <p class="mt-4 text-sm">Topics: {asset.topics.join(", ")}</p>
+          {/if}
           <div class="mt-4">
             <div class="mb-2 uppercase">Creator</div>
             {#await getProfile(asset.owner) then creator}
