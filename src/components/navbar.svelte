@@ -43,14 +43,22 @@
           <li><a href="/home">Upload</a></li>
           <li><a href="/hx/{addr}">My Imgs</a></li>
           <li><a href="/about">About</a></li>
+          <li>
+            <button class="btn btn-ghost" on:click={handleDisconnect}
+              >{take(5, $profile.addr)}...</button
+            >
+          </li>
         </ul>
+        <a href="/home" class="btn btn-ghost normal-case text-xl md:hidden"
+          >img</a
+        >
       </div>
     {/if}
   </div>
-  <div class="navbar-center">
+  <div class="hidden navbar-center md:flex">
     <a href="/home" class="btn btn-ghost normal-case text-xl">img</a>
   </div>
-  <div class="navbar-end">
+  <div class="hidden navbar-end md:flex">
     {#if $profile}
       <a href="/home" class="btn btn-ghost">Upload</a>
       <a href="/hx/{addr}" class="btn btn-ghost">My Imgs</a>

@@ -1,6 +1,7 @@
 <script>
   import Navbar from "../components/navbar.svelte";
   import { getAssetData } from "../lib/asset.js";
+  import { atomicToStamp } from "../lib/utils.js";
   import Construction from "../dialogs/construction.svelte";
   import Stamping from "../dialogs/stamping.svelte";
   import ErrorDialog from "../dialogs/error.svelte";
@@ -10,6 +11,7 @@
   import { onMount } from "svelte";
   import { imgCache, profile } from "../store.js";
   import { isVouched, stamp, getCount, getRewards } from "../lib/stamp.js";
+  import { getProfile } from "../lib/account.js";
 
   export let id;
   let src = "https://placehold.co/400";
@@ -19,6 +21,7 @@
   let errorMsg = "";
   let showConnect = false;
   let showHelp = false;
+  let tryingToStamp = false;
 
   onMount(async () => {
     const i = $imgCache.find((img) => img.id === id);
@@ -61,14 +64,23 @@
 
   async function handleStamp() {
     if (!window.arweaveWallet) {
-      alert("Wallet not connected!");
+      tryingToStamp = true;
+      showConnect = true;
       return;
     }
+    tryingToStamp = false;
     stampDlg = true;
     const addr = await window.arweaveWallet.getActiveAddress();
+    console.log(addr);
     isVouched(addr)
       .then((res) =>
-        res ? stamp(id) : Promise.reject(new Error("could not stamp asset"))
+        res
+          ? stamp(id)
+          : Promise.reject(
+              new Error(
+                "Could not stamp asset, make sure you are Verified by a Vouch Service, <a target='_blank' class='link' href='https://vouchdao.xyz'>https://vouchdao.xyz</a>"
+              )
+            )
       )
       .then((res) => {
         assetCount = getCount(id);
@@ -81,6 +93,18 @@
       });
   }
 
+  function tweetLink(title, id) {
+    return `https://twitter.com/intent/tweet?text=${encodeURI(
+      "🪧 STAMP\n\n" + title.replace("#", "no ") + "\n\n🐘"
+    )}&url=https://img.arweave.dev/%23/show/${id}`;
+  }
+
+  function connected() {
+    if (tryingToStamp) {
+      handleStamp();
+    }
+  }
+
   let assetCount = getCount(id);
   let assetData = getAssetData(id);
 </script>
@@ -91,78 +115,90 @@
   <meta property="og:url" content="{location.origin}/#/show/{id}" />
 </svelte:head>
 
-<Navbar />
+<Navbar on:connect={() => (showConnect = true)} />
 {#await getAssetData(id) then asset}
   <main>
     <section class="hero min-h-screen bg-base-100">
-      <div class="hero-content space-x-4">
-        <div class="w-1/2 grid place-items-center">
-          <img class="w-full h-full" {src} alt={asset.title} />
+      <div
+        class="hero-content w-[350px] md:w-full p-0 m-0 flex-col md:flex-row md:space-x-4"
+      >
+        <div class="md:w-1/2 px-0 mx-0 grid place-items-center">
+          <img class="h-[400px]" {src} alt={asset.title} />
           {#if imageMsg !== ""}
             <p>{imageMsg}</p>
           {/if}
+          <button
+            on:click={handleStamp}
+            class="mt-4 btn btn-block rounded-none"
+          >
+            <span class="text-xl font-normal">STAMP</span>
+            <img
+              class="ml-4 h-[35px] w-[35px]"
+              src="assets/stamp.svg"
+              alt="stamp-logo"
+            />
+          </button>
         </div>
-        <div class="w-1/2 ml-8">
-          <h1 class="text-5xl mb-8">{asset.title}</h1>
+        <div class="w-[325px] md:w-1/2 px-0 mx-0 md:ml-8">
+          <div class="mb-4 px-0 mx-0 flex items-start justify-between">
+            <h1 class="text-3xl">{asset.title}</h1>
+            <a
+              target="_blank"
+              href={tweetLink(asset.title, id)}
+              class="btn btn-outline btn-sm rounded-none font-normal">share</a
+            >
+          </div>
           <p class="text-xl">{asset.description}</p>
+          {#if asset.topics.length > 0}
+            <p class="mt-4 text-sm">Topics: {asset.topics.join(", ")}</p>
+          {/if}
+          <div class="mt-4">
+            <div class="mb-2 uppercase">Creator</div>
+            {#await getProfile(asset.owner) then creator}
+              <div class="flex items-center space-x-2">
+                <img
+                  class="mask mask-circle h-[35px] w-[35px]"
+                  src={creator.profile.avatarURL}
+                  alt="avatar"
+                />
+                {#if creator.profile.handleName === ""}
+                  <div>{asset.owner}</div>
+                {:else}
+                  <div>{creator.profile.handleName}</div>
+                {/if}
+              </div>
+            {/await}
+          </div>
           <div class="mt-8 space-y-4">
             <div class="flex justify-between">
-              <div class="mb-4">
-                STAMPs:
-                {#await assetCount then count}
-                  {count}
-                {/await}
+              <div class="mb-4 flex flex-col">
+                <div>STAMPS</div>
+                <div class="flex space-x-4 items-center">
+                  <img
+                    class="h-[35px] w-[35px]"
+                    src="assets/stamp2.svg"
+                    alt="stamp"
+                  />
+                  {#await assetCount then count}
+                    <div>{count}</div>
+                  {/await}
+                </div>
               </div>
               <div>
-                Rewards:
-                {#await getRewards(id) then rewards}
-                  {rewards}
-                {/await}
+                <div class="flex flex-col">
+                  <div class="uppercase">Rewards</div>
+                  <div class="flex space-x-4">
+                    <div class="font-bold">$TAMP</div>
+                    {#await getRewards(id) then rewards}
+                      <div>{Number(atomicToStamp(rewards)).toFixed(5)}</div>
+                    {/await}
+                  </div>
+                </div>
               </div>
             </div>
             <div>
               Link: <a class="link" href="https://arweave.net/{id}">{id}</a>
             </div>
-            {#if $profile}
-              <button
-                on:click={handleStamp}
-                class="btn btn-block btn-outline rounded-none">STAMP</button
-              >
-            {:else}
-              <button
-                class="btn btn-block rounded-none"
-                on:click={() => (showConnect = true)}>Connect Wallet</button
-              >
-            {/if}
-            <a
-              href="/hx/{asset.owner}"
-              class="btn btn-block btn-outline btn-secondary rounded-none"
-              >Owner History</a
-            >
-
-            <!--
-            <button
-              on:click={() => {
-                msg = "SELL feature is not implemented yet, coming soon!";
-                constructionDlg = true;
-              }}
-              class="btn btn-block btn-outline btn-error rounded-none"
-              >SELL</button
-            >
-            <button
-              on:click={() => {
-                msg = "BUY feature is not implemented yet, coming soon!";
-                constructionDlg = true;
-              }}
-              class="btn btn-block btn-outline btn-success rounded-none"
-              >BUY</button
-            >
-            -->
-            <a
-              href="/home"
-              class="btn btn-block btn-outline btn-primary rounded-none"
-              >Back to Upload</a
-            >
           </div>
         </div>
       </div>
@@ -176,5 +212,9 @@
 />
 <Stamping bind:open={stampDlg} />
 <ErrorDialog bind:open={errorDlg} msg={errorMsg} />
-<ConnectModal bind:open={showConnect} on:help={() => (showHelp = true)} />
+<ConnectModal
+  bind:open={showConnect}
+  on:connected={connected}
+  on:help={() => (showHelp = true)}
+/>
 <WalletHelp bind:open={showHelp} />

@@ -221,12 +221,12 @@
   <section class="hero min-h-screen bg-base-100 items-start">
     <div class="flex flex-col items-center justify-start">
       <p>Upload</p>
-      <form class="form mt-16" on:submit|preventDefault={doDeploy}>
-        <div class="flex flex-col md:flex-row space-x-16 justify-center">
+      <form class="form mt-16 px-4 md:px-0" on:submit|preventDefault={doDeploy}>
+        <div class="flex flex-col md:flex-row md:space-x-16 justify-center">
           <div>
             {#if files[0]}
               <img
-                class="border-2 border-secondary w-[500px]"
+                class="border-2 border-secondary w-full md:w-[500px]"
                 src={URL.createObjectURL(files[0])}
                 alt="img"
               />
@@ -238,7 +238,7 @@
               <div class="form-control">
                 <label
                   for="file"
-                  class="bg-gray-200 h-[350px] w-[500px] grid place-items-center rounded-xl hover:shadow-xl"
+                  class="bg-gray-200 h-[200px] md:h-[350px] w-full md:w-[500px] grid place-items-center rounded-xl hover:shadow-xl"
                 >
                   <div>
                     <span class="text-gray-400">Select Image</span>
@@ -254,7 +254,7 @@
                   required
                 />
                 <p
-                  class="py-8 w-[500px] bg-whitesmoke-200 text-gray-500 text-sm"
+                  class="py-8 w-full md:w-[500px] bg-whitesmoke-200 text-gray-500 text-sm"
                 >
                   When uploading images, it is important to note that you are
                   storing these images on a permanent blockchain and by
@@ -306,7 +306,7 @@
                 >(when using $AR you also mint $BAR)</label
               >
             </div>
-            <div class="mt-16 space-y-4">
+            <div class="my-16 space-y-4">
               <button disabled={notValid} class="btn btn-block">Deploy</button>
             </div>
           </div>
