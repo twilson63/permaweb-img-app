@@ -109,6 +109,7 @@
       {#each images as img}
         <div class="md:hidden flex flex-col space-y-4 p-4 mb-4 shadow-xl">
           <div class="flex space-x-2">
+            <!--
             <div class="w-[75px] flex justify-center">
               <img
                 class="h-[48px] py-2"
@@ -116,6 +117,7 @@
                 alt={img.title}
               />
             </div>
+            -->
             <div class="flex flex-col w-[250px]">
               <h3 class="text-[14px] font-bold">{img.title}</h3>
               <p class="text-[10px] font-light">
@@ -140,7 +142,7 @@
                 <span class="text-primary text-[10px]">copied!</span>
               {/if}
             </div>
-            <p class="text-[12px] font-light flex space-x-2 items-center">
+            <p class="text-[10px] font-light flex space-x-2 items-center">
               {img.id}
             </p>
           </div>

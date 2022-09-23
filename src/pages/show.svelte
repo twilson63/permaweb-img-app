@@ -7,6 +7,7 @@
   import ErrorDialog from "../dialogs/error.svelte";
   import ConnectModal from "../dialogs/connect.svelte";
   import WalletHelp from "../dialogs/wallet-help.svelte";
+  import { take, takeLast } from "ramda";
 
   import { onMount } from "svelte";
   import { imgCache, profile } from "../store.js";
@@ -196,7 +197,12 @@
                 </div>
               </div>
             </div>
-            <div>
+            <div class="md:hidden">
+              Link: <a class="link" href="https://arweave.net/{id}"
+                >{take(5, id)}...{takeLast(5, id)}</a
+              >
+            </div>
+            <div class="hidden md:block">
               Link: <a class="link" href="https://arweave.net/{id}">{id}</a>
             </div>
           </div>
