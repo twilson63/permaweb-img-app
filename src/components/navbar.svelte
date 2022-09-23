@@ -1,13 +1,19 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import { profile } from "../store.js";
+  import { take } from "ramda";
 
   const dispatch = createEventDispatcher();
 
-  const addr = $profile ? $profile.addr : "";
+  $: addr = $profile ? $profile.addr : "";
 
   function handleConnect() {
     dispatch("connect");
+  }
+
+  async function handleDisconnect() {
+    await window.arweaveWallet.disconnect();
+    $profile = null;
   }
 </script>
 
@@ -49,6 +55,10 @@
       <a href="/home" class="btn btn-ghost">Upload</a>
       <a href="/hx/{addr}" class="btn btn-ghost">My Imgs</a>
       <a href="/about" class="btn btn-ghost">About</a>
+
+      <button class="btn btn-ghost" on:click={handleDisconnect}
+        >{take(5, $profile.addr)}...</button
+      >
     {:else}
       <button on:click={handleConnect} class="btn btn-ghost">Connect</button>
     {/if}

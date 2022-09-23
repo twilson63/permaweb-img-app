@@ -1,9 +1,14 @@
 <script>
   import Navbar from "../components/navbar.svelte";
   import { marked } from "marked";
+  import ConnectModal from "../dialogs/connect.svelte";
+  import WalletHelp from "../dialogs/wallet-help.svelte";
+
+  let showConnect = false;
+  let showHelp = false;
 </script>
 
-<Navbar />
+<Navbar on:connect={() => (showConnect = true)} />
 <main>
   <section class="hero min-h-screen bg-base-100">
     <div class="hero-content flex-col">
@@ -23,3 +28,5 @@ You can also find the completed github repository for this tutorial here: [Githu
     </div>
   </section>
 </main>
+<ConnectModal bind:open={showConnect} on:help={() => (showHelp = true)} />
+<WalletHelp bind:open={showHelp} />

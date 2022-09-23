@@ -218,16 +218,9 @@
 
 <Navbar />
 <main>
-  <section class="hero min-h-screen bg-base-100">
+  <section class="hero min-h-screen bg-base-100 items-start">
     <div class="flex flex-col items-center justify-start">
-      <h1 class="text-6xl font-bold">img</h1>
       <p>Upload</p>
-      <p class="p-8 w-[600px] bg-whitesmoke-200 text-gray-500 text-sm">
-        When uploading images, it is important to note that you are storing
-        these images on a permanent blockchain and by uploading you are
-        indicating that you have permission to do so. NSFW content is not
-        permitted on this service.
-      </p>
       <form class="form mt-16" on:submit|preventDefault={doDeploy}>
         <div class="flex flex-col md:flex-row space-x-16 justify-center">
           <div>
@@ -260,6 +253,14 @@
                   accept="image/png, image/jpeg, image/gif, image/jpg, image/webp, image/svg+xml"
                   required
                 />
+                <p
+                  class="py-8 w-[500px] bg-whitesmoke-200 text-gray-500 text-sm"
+                >
+                  When uploading images, it is important to note that you are
+                  storing these images on a permanent blockchain and by
+                  uploading you are indicating that you have permission to do
+                  so. NSFW content is not permitted on this service.
+                </p>
               </div>
             {/if}
           </div>
