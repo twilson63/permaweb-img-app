@@ -111,6 +111,13 @@ async function upload(ctx) {
   tx.addTag('Contract', BAR)
 
   await arweave.transactions.sign(tx)
-  await arweave.transactions.post(tx)
-  return { ...ctx, assetId: tx.id }
+  const result = await arweave.transactions.post(tx)
+
+  if (result.status === 400) {
+    throw new Error('Not enough $AR in wallet to upload img!')
+  } else if (result.status === 200) {
+    return { ...ctx, assetId: tx.id }
+  }
+  throw new Error(result.message + ' while trying to upload!')
+
 }
