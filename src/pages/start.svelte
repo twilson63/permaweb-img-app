@@ -31,6 +31,7 @@
                   class="h-[100px] w-[128px]"
                   src="https://arweave.net/{img.id}"
                   alt={img.title}
+                  onerror="this.src = 'assets/img.png'"
                 />
               </a>
             </div>
