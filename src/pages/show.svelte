@@ -124,7 +124,7 @@
         class="hero-content w-[350px] md:w-full p-0 m-0 flex-col md:flex-row md:space-x-4"
       >
         <div class="md:w-1/2 px-0 mx-0 grid place-items-center">
-          <img class="h-[400px]" {src} alt={asset.title} />
+          <img class="h-[400px] w-full md:w-[500px]" {src} alt={asset.title} />
           {#if imageMsg !== ""}
             <p>{imageMsg}</p>
           {/if}
