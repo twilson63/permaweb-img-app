@@ -1,5 +1,7 @@
 <script>
   import { router } from "tinro";
+  import { listAssets } from "../lib/asset.js";
+
   import ConnectModal from "../dialogs/connect.svelte";
   import WalletHelp from "../dialogs/wallet-help.svelte";
   let showConnect = false;
@@ -20,6 +22,21 @@
         >
         <a href="/about" class="btn btn-outline">Learn More</a>
       </div>
+      {#await listAssets(9) then imgs}
+        <div class="w-full grid gap-4 grid-cols-3 grid-flow-row">
+          {#each imgs as img}
+            <div>
+              <a href="/show/{img.id}">
+                <img
+                  class="h-[100px] w-[128px]"
+                  src="https://arweave.net/{img.id}"
+                  alt={img.title}
+                />
+              </a>
+            </div>
+          {/each}
+        </div>
+      {/await}
     </div>
   </section>
 </main>

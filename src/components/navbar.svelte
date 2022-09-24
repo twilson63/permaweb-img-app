@@ -49,14 +49,12 @@
             >
           </li>
         </ul>
-        <a href="/home" class="btn btn-ghost normal-case text-xl md:hidden"
-          >img</a
-        >
+        <a href="/" class="btn btn-ghost normal-case text-xl md:hidden">img</a>
       </div>
     {/if}
   </div>
   <div class="hidden navbar-center md:flex">
-    <a href="/home" class="btn btn-ghost normal-case text-xl">img</a>
+    <a href="/" class="btn btn-ghost normal-case text-xl">img</a>
   </div>
   <div class="hidden navbar-end md:flex">
     {#if $profile}

@@ -1,4 +1,4 @@
-import { compose, prop, propEq, find, map, pluck, path, reduce, values, filter } from 'ramda'
+import { take, compose, prop, propEq, find, map, pluck, path, reduce, values, filter } from 'ramda'
 import { WarpFactory } from 'warp-contracts/web'
 import Account from 'arweave-account'
 
@@ -9,9 +9,54 @@ const account = new Account({
 })
 const warp = WarpFactory.forMainnet()
 
+export async function listAssets(count) {
+  return fetch('https://arweave.net/graphql', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      query: `
+query {
+  transactions(first: 100, tags: [
+    {name: "Type", values: ["image"]}
+  ]) {
+    edges {
+      node {
+        id
+        tags {
+          name
+          value
+        }
+      }
+    }
+  }
+}
+      `
+    })
+  }).then(res => res.json())
+    .then(path(['data', 'transactions', 'edges']))
+    //.then(x => (console.log(x), x))
+    .then(compose(
+      take(count),
+      map(node => {
+        return {
+          id: prop('id', node),
+          title: prop('value', find(propEq('name', 'Title'), node.tags))
+        }
+      }),
+      filter(node =>
+        prop('value', find(propEq('name', 'Uploader'), node.tags)) !== 'RedStone'
+      ),
+      pluck('node')
+    ))
+
+}
+
 export async function assetDetails(asset, addr) {
-  const state = await fetch('https://cache.permapages.app/' + asset)
-    .then(res => res.ok ? res.json() : Promise.reject(new Error('could not find asset state!')))
+  // const state = await fetch('https://cache.permapages.app/' + asset)
+  //   .then(res => res.ok ? res.json() : Promise.reject(new Error('could not find asset state!')))
+  const state = await warp.contract(asset).setEvaluationOptions({ internalWrites: true, allowBigInt: true }).readState()
+    .then(path(['cachedValue', 'state']))
+  //console.log(state)
   try {
     const balances = state.balances
     const totalBalance = reduce((a, b) => a + b, 0, values(balances))
