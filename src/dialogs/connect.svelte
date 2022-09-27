@@ -12,27 +12,36 @@
     if (!window.arweaveWallet) {
       window.open("https://arconnect.io");
     }
-    await arweaveWallet.connect(
-      ["ACCESS_ADDRESS", "SIGN_TRANSACTION", "DISPATCH"],
-      { name: "img" }
-    );
-    const addr = await arweaveWallet.getActiveAddress();
-    $profile = { addr };
-    open = false;
-    dispatch("connected");
+    try {
+      await arweaveWallet.disconnect();
+      await arweaveWallet.connect(
+        ["ACCESS_ADDRESS", "SIGN_TRANSACTION", "DISPATCH"],
+        { name: "img" }
+      );
+      const addr = await arweaveWallet.getActiveAddress();
+      $profile = { addr };
+      open = false;
+      dispatch("connected");
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async function arwallet() {
-    const wallet = new ArweaveWebWallet({
-      name: "img",
-    });
-    wallet.setUrl("arweave.app");
-    await wallet.connect();
+    try {
+      const wallet = new ArweaveWebWallet({
+        name: "img",
+      });
+      wallet.setUrl("arweave.app");
+      await wallet.connect();
 
-    const addr = await arweaveWallet.getActiveAddress();
-    $profile = { addr };
-    open = false;
-    dispatch("connected");
+      const addr = await arweaveWallet.getActiveAddress();
+      $profile = { addr };
+      open = false;
+      dispatch("connected");
+    } catch (e) {
+      console.log(e);
+    }
   }
 </script>
 
