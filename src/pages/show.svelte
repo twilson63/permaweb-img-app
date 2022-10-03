@@ -8,6 +8,7 @@
   import ConnectModal from "../dialogs/connect.svelte";
   import WalletHelp from "../dialogs/wallet-help.svelte";
   import { take, takeLast } from "ramda";
+  import { format } from "date-fns";
 
   import { onMount } from "svelte";
   import { imgCache, profile } from "../store.js";
@@ -158,21 +159,34 @@
             <p class="mt-4 text-sm">Topics: {asset.topics.join(", ")}</p>
           {/if}
           <div class="mt-4">
-            <div class="mb-2 uppercase">Creator</div>
-            {#await getProfile(asset.owner) then creator}
-              <div class="flex items-center space-x-2">
-                <img
-                  class="mask mask-circle h-[35px] w-[35px]"
-                  src={creator.profile.avatarURL}
-                  alt="avatar"
-                />
-                {#if creator.profile.handleName === ""}
-                  <div>{asset.owner}</div>
-                {:else}
-                  <div>{creator.profile.handleName}</div>
-                {/if}
+            <div class="flex justify-between">
+              <div>
+                <div class="mb-2 uppercase">Creator</div>
+                {#await getProfile(asset.owner) then creator}
+                  <div class="flex items-center space-x-2">
+                    <img
+                      class="mask mask-circle h-[35px] w-[35px]"
+                      src={creator.profile.avatarURL}
+                      alt="avatar"
+                    />
+                    {#if creator.profile.handleName === ""}
+                      <div>{asset.owner}</div>
+                    {:else}
+                      <div>{creator.profile.handleName}</div>
+                    {/if}
+                  </div>
+                {/await}
               </div>
-            {/await}
+              <div>
+                <div class="mb-2 uppercase">Timestamp</div>
+                <div>
+                  {format(
+                    new Date(asset.timestamp * 1000),
+                    "MM-dd-yyyy HH:MM:SS a"
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
           <div class="mt-8 space-y-4">
             <div class="flex justify-between">

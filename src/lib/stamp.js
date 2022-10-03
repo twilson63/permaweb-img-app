@@ -1,5 +1,5 @@
 import { WarpFactory, defaultCacheOptions } from 'warp-contracts/web'
-import { add, compose, propEq, values, length, prop, filter, reduce, pluck } from 'ramda'
+import { add, compose, propEq, values, length, prop, filter, reduce, pluck, path } from 'ramda'
 
 const arweave = Arweave.init({
   host: 'arweave.net',
@@ -35,6 +35,16 @@ export async function stamp(transactionId) {
   })
     .then(x => fetch(`${CACHE}/${STAMPCOIN}`)
       .then(res => res.json())
+      .catch(e => warp.contract(STAMPCOIN)
+        .setEvaluationOptions({
+          internalWrites: true,
+          allowBigInt: true,
+          allowUnsafeClient: true
+        })
+        .readState()
+        .then(path(['cachedValue', 'state']))
+
+      )
       .then(state => (data = state, data))
       .then(_ => x)
     )

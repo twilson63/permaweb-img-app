@@ -258,7 +258,8 @@ export async function getAssetData(id) {
       description: prop('value', find(propEq('name', 'Description'), data.transaction.tags)),
       type: prop('value', find(propEq('name', 'Type'), data.transaction.tags)),
       topics: pluck('value', filter(t => t.name.includes('Topic:'), data.transaction.tags)),
-      owner: data.transaction.owner.address
+      owner: data.transaction.owner.address,
+      timestamp: data.transaction?.block?.timestamp || Date.now() / 1000
     }))
   //.then(_ => ({ title: 'Test', description: 'Description' }))
 }
@@ -274,6 +275,9 @@ query {
     tags {
       name
       value
+    }
+    block {
+      timestamp
     }
   }
 }
