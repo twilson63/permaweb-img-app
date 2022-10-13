@@ -112,7 +112,7 @@
 </script>
 
 <svelte:head>
-  <title>img</title>
+  <title>pst</title>
   <meta property="og:image" content="{location.origin}/{id}" />
   <meta property="og:url" content="{location.origin}/#/show/{id}" />
 </svelte:head>
