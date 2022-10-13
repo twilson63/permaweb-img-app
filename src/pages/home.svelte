@@ -14,7 +14,7 @@
   const WebBundlr = Bundlr.default;
 
   const { connect, keyStores, WalletConnection } = nearAPI;
-
+  const BAR = "mMffEC07TyoAFAI_O6q_nskj2bT8n4UFvckQ3yELeic";
   const NEAR_OPTS = {
     networkId: "mainnet",
     keyStore: new keyStores.BrowserLocalStorageKeyStore(),
@@ -149,7 +149,15 @@
       const trx = await bundlr.createTransaction(
         await toArrayBuffer(files[0]),
         {
-          tags: [{ name: "Content-Type", value: files[0].type }],
+          tags: [
+            { name: "Content-Type", value: files[0].type },
+            { name: "Protocol-Name", value: "BAR" },
+            { name: "Action", value: "Burn" },
+            { name: "App-Name", value: "SmartWeaveAction" },
+            { name: "App-Version", value: "0.3.0" },
+            { name: "Input", value: JSON.stringify({ function: "mint" }) },
+            { name: "Contract", value: BAR },
+          ],
         }
       );
 
@@ -209,7 +217,15 @@
         const trx = await bundlr.createTransaction(
           await toArrayBuffer(files[0]),
           {
-            tags: [{ name: "Content-Type", value: files[0].type }],
+            tags: [
+              { name: "Content-Type", value: files[0].type },
+              { name: "Protocol-Name", value: "BAR" },
+              { name: "Action", value: "Burn" },
+              { name: "App-Name", value: "SmartWeaveAction" },
+              { name: "App-Version", value: "0.3.0" },
+              { name: "Input", value: JSON.stringify({ function: "mint" }) },
+              { name: "Contract", value: BAR },
+            ],
           }
         );
 

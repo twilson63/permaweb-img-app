@@ -90,7 +90,11 @@ async function createAndTag(ctx) {
   }))
   tx.addTag('Title', ctx.name)
   tx.addTag('Description', ctx.description)
-  tx.addTag('Type', 'image')
+  const assetType = ctx.contentType.split('/')[0] || 'image'
+  if (assetType === 'application') {
+    const assetType = ctx.contentType.split('/')[1]
+  }
+  tx.addTag('Type', assetType)
 
   map(trim, split(',', ctx.topics)).forEach(t => {
     tx.addTag('Topic:' + t, t)
