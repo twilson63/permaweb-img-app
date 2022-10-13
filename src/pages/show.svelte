@@ -98,7 +98,7 @@
   function tweetLink(title, id) {
     return `https://twitter.com/intent/tweet?text=${encodeURI(
       "🪧 STAMP\n\n" + title.replace("#", "no ") + "\n\n🐘"
-    )}&url=https://img.arweave.dev/%23/show/${id}`;
+    )}&url=https://pst.arweave.dev/%23/show/${id}`;
   }
 
   function connected() {
