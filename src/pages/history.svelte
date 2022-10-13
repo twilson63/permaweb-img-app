@@ -206,11 +206,11 @@
           {#each images as img}
             <tr>
               <td>
-                <div class="w-[140px] flex justify-center">
+                <div class="w-[75px] flex justify-center">
                   <img
-                    class="h-[75px]"
+                    class="h-[75px] w-[75]"
                     src="https://arweave.net/{img.id}"
-                    alt={img.title}
+                    onerror="this.src = 'assets/pst.svg'"
                   />
                 </div>
               </td>

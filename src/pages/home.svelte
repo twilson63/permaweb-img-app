@@ -311,10 +311,9 @@
         <div class="flex flex-col md:flex-row md:space-x-16 justify-center">
           <div>
             {#if files[0]}
-              <img
-                class="border-2 border-secondary w-full md:w-[500px]"
+              <iframe
+                class="border-2 border-secondary w-full md:w-[500px] md:h-[350px]"
                 src={URL.createObjectURL(files[0])}
-                alt="img"
               />
               <div class="mt-2 flex justify-end">
                 <button on:click={() => (files = [])} class="link">clear</button
@@ -327,7 +326,7 @@
                   class="bg-gray-200 h-[200px] md:h-[350px] w-full md:w-[500px] grid place-items-center rounded-xl hover:shadow-xl"
                 >
                   <div>
-                    <span class="text-gray-400">Select Image</span>
+                    <span class="text-gray-400">Select Media</span>
                     <img src="assets/image.svg" alt="image-icon" />
                   </div>
                 </label>
@@ -336,7 +335,7 @@
                   type="file"
                   class="hidden input input-bordered"
                   bind:files
-                  accept="image/png, image/jpeg, image/gif, image/jpg, image/webp, image/svg+xml"
+                  accept="image/png, image/jpeg, image/gif, image/jpg, image/webp, image/svg+xml, application/pdf, audio/basic, audio/mp4, audio/mpeg, audio/ogg, video/avi, video/mpeg, video/mp4, video/ogg"
                   required
                 />
                 <p

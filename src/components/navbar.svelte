@@ -41,7 +41,7 @@
       >
         {#if $profile}
           <li><a href="/home">Upload</a></li>
-          <li><a href="/hx/{addr}">My Imgs</a></li>
+          <li><a href="/hx/{addr}">My PSTs</a></li>
         {/if}
         <li><a href="/about">About</a></li>
         {#if $profile}
@@ -52,16 +52,16 @@
           </li>
         {/if}
       </ul>
-      <a href="/" class="btn btn-ghost normal-case text-xl md:hidden">img</a>
+      <a href="/" class="btn btn-ghost normal-case text-xl md:hidden">pst</a>
     </div>
   </div>
   <div class="hidden navbar-center md:flex">
-    <a href="/" class="btn btn-ghost normal-case text-xl">img</a>
+    <a href="/" class="btn btn-ghost normal-case text-xl">pst</a>
   </div>
   <div class="hidden navbar-end md:flex">
     {#if $profile}
       <a href="/home" class="btn btn-ghost">Upload</a>
-      <a href="/hx/{addr}" class="btn btn-ghost">My Imgs</a>
+      <a href="/hx/{addr}" class="btn btn-ghost">My PSTs</a>
       <a href="/about" class="btn btn-ghost">About</a>
 
       <button class="btn btn-ghost" on:click={handleDisconnect}
