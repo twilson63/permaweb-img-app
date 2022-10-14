@@ -17,7 +17,7 @@ export async function listAssets(count) {
       query: `
 query {
   transactions(first: 100, tags: [
-    {name: "Type", values: ["image"]}
+    {name: "Type", values: ["image", "video", "pdf", "audio"]}
   ]) {
     edges {
       node {
@@ -216,7 +216,7 @@ export async function imagesByOwner(addr) {
     body: JSON.stringify({
       query: `
 query {
-  transactions(first: 100, owners: ["${addr}"], tags: {name: "Type", values: ["image"]}) {
+  transactions(first: 100, owners: ["${addr}"], tags: {name: "Type", values: ["image", "video", "pdf", "audio"]}) {
     edges {
       node {
         id
