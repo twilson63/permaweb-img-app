@@ -125,14 +125,25 @@
         class="hero-content w-[350px] md:w-full p-0 m-0 flex-col md:flex-row md:space-x-4"
       >
         <div class="md:w-1/2 px-0 mx-0 grid place-items-center">
-          <!--
-          <img
-            class="h-[400px] w-full md:w-[500px] object-contain"
-            {src}
-            alt={asset.title}
-          />
-          -->
-          <iframe {src} class="h-[400px] w-full md:w-[500px] object-contain" />
+          {#if asset.type === "image"}
+            <img
+              class="h-[400px] w-full md:w-[500px] object-contain"
+              {src}
+              alt={asset.title}
+            />
+          {:else if asset.type === "video"}
+            <video
+              controls
+              class="h-[400px] w-full md:w-[500px] object-contain"
+            >
+              <source {src} />
+            </video>
+          {:else}
+            <iframe
+              {src}
+              class="h-[400px] w-full md:w-[500px] object-contain"
+            />
+          {/if}
           {#if imageMsg !== ""}
             <p>{imageMsg}</p>
           {/if}
