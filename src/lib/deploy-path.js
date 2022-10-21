@@ -5,7 +5,7 @@ const arweave = Arweave.init({
   protocol: 'https'
 })
 
-const BAR = 'mMffEC07TyoAFAI_O6q_nskj2bT8n4UFvckQ3yELeic'
+const BAR = 'VFr3Bk-uM-motpNNkkFg4lNW1BMmSfzqsVO551Ho4hA'
 
 /*
  * Need to upload to arweave using post
