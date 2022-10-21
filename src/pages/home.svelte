@@ -327,8 +327,8 @@
         <div class="flex flex-col md:flex-row md:space-x-16 justify-center">
           <div>
             {#if files[0]}
-              <iframe
-                class="border-2 border-secondary w-full md:w-[500px] md:h-[350px]"
+              <img
+                class="border-2 border-secondary w-full md:w-[500px] md:h-[350px] object-contain"
                 src={URL.createObjectURL(files[0])}
               />
               <div class="mt-2 flex justify-end">
