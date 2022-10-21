@@ -14,9 +14,9 @@
     <div class="hero-content flex-col">
       <div class="prose prose-xl">
         {@html marked.parse(`
-# pst
+# img
 
-\`pst\` is a decentrailized application that has been created to showcase Atomic Assets. An Atomic Asset is
+\`img\` is a decentrailized application that has been created to showcase Atomic Assets. An Atomic Asset is
 a Tradeable PST (Profit Sharing Token), that can be STAMPed (https://stamps.live). The \`STAMP\` process gives viewers the ability to create a proof of 
 attention. And by making the data tradeable, it allows the community to share in the rewards.
  

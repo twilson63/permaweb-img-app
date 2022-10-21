@@ -104,10 +104,12 @@
   <header class="my-16">
     <h1 class="text-3xl">History</h1>
   </header>
-  <section>
+  <section class="flex flex-col items-center max-w-screen">
     {#await images then images}
       {#each images as img}
-        <div class="md:hidden flex flex-col space-y-4 p-4 mb-4 shadow-xl">
+        <div
+          class="md:hidden flex flex-col space-y-4 p-4 mb-4 shadow-xl w-full"
+        >
           <div class="flex space-x-2">
             <!--
             <div class="w-[75px] flex justify-center">
@@ -188,7 +190,7 @@
           </div>
         </div>
       {/each}
-      <table class="hidden md:block table">
+      <table class="hidden md:block table table-zebra">
         <thead>
           <tr>
             <th class="text-center">Preview</th>
@@ -210,12 +212,12 @@
                   <img
                     class="h-[75px] w-[75]"
                     src="https://arweave.net/{img.id}"
-                    onerror="this.src = 'assets/pst.svg'"
+                    onerror="this.src = 'assets/img.png'"
                   />
                 </div>
               </td>
               <td>
-                <div class="flex flex-col w-[300px]">
+                <div class="flex flex-col">
                   <h3 class="text-[18px] font-bold">{img.title}</h3>
                   <p class="text-[18px] font-light">
                     Last update:

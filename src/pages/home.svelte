@@ -14,7 +14,7 @@
   const WebBundlr = Bundlr.default;
 
   const { connect, keyStores, WalletConnection } = nearAPI;
-  const BAR = "mMffEC07TyoAFAI_O6q_nskj2bT8n4UFvckQ3yELeic";
+  const BAR = "VFr3Bk-uM-motpNNkkFg4lNW1BMmSfzqsVO551Ho4hA";
   const NEAR_OPTS = {
     networkId: "mainnet",
     keyStore: new keyStores.BrowserLocalStorageKeyStore(),
@@ -342,7 +342,7 @@
                   class="bg-gray-200 h-[200px] md:h-[350px] w-full md:w-[500px] grid place-items-center rounded-xl hover:shadow-xl"
                 >
                   <div>
-                    <span class="text-gray-400">Select Media</span>
+                    <span class="text-gray-400">Select Image</span>
                     <img src="assets/image.svg" alt="image-icon" />
                   </div>
                 </label>
@@ -351,7 +351,7 @@
                   type="file"
                   class="hidden input input-bordered"
                   bind:files
-                  accept="image/png, image/jpeg, image/gif, image/jpg, image/webp, image/svg+xml, application/pdf, audio/basic, audio/mp4, audio/mpeg, audio/ogg, video/avi, video/mpeg, video/mp4, video/ogg"
+                  accept="image/png, image/jpeg, image/gif, image/jpg, image/webp, image/svg+xml"
                   required
                 />
                 <p

@@ -11,7 +11,7 @@
 <main>
   <section class="hero min-h-screen bg-base-100">
     <div class="hero-content flex-col space-y-16">
-      <h1 class="text-8xl font-bold hover:text-primary">pst</h1>
+      <h1 class="text-8xl font-bold hover:text-primary">img</h1>
       <p class="text-2xl dark:text-white">
         A utility app that allows you to upload <br />your media as tradeable
         atomic assets.
@@ -31,7 +31,7 @@
                   class="h-[100px] w-[128px]"
                   src="https://arweave.net/{img.id}"
                   alt={img.title}
-                  onerror="this.src = 'assets/pst.svg'"
+                  onerror="this.src = 'assets/img.png'"
                 />
               </a>
             </div>

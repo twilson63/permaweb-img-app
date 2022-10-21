@@ -17,7 +17,7 @@ export async function listAssets(count) {
       query: `
 query {
   transactions(first: 100, tags: [
-    {name: "Type", values: ["image", "video", "pdf", "audio"]}
+    {name: "Type", values: ["image"]}
   ]) {
     edges {
       node {
@@ -77,7 +77,8 @@ export async function assetDetails(asset, addr) {
 export async function transfer({ asset, title, caller, addr, percent }) {
 
   const contract = warp.contract(asset).connect('use_wallet').setEvaluationOptions({
-    internalWrites: true
+    internalWrites: true,
+    allowBigInt: true
   })
 
   const res = await contract.viewState({
@@ -216,7 +217,7 @@ export async function imagesByOwner(addr) {
     body: JSON.stringify({
       query: `
 query {
-  transactions(first: 100, owners: ["${addr}"], tags: {name: "Type", values: ["image", "video", "pdf", "audio"]}) {
+  transactions(first: 100, owners: ["${addr}"], tags: {name: "Type", values: ["image"]}) {
     edges {
       node {
         id

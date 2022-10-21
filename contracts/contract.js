@@ -49,6 +49,7 @@ export async function handle(state, action) {
         throw new ContractError("This claim has already been made");
       }
     }
+    if (!Number.isInteger(balances[caller])) balances[caller] = 0;
     // Not already claimed --> can claim
     balances[caller] += obj.qty;
 
