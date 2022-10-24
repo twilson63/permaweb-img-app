@@ -14,6 +14,10 @@ const publicUrl = `3000-${host}`
 // https://vitejs.dev/config/
 export default defineConfig({
   base: '',
+  define: {
+    __STAMP_CONTRACT__: '"jAE_V6oXkb0dohIOjReMhrTlgLW0X2j3rxIZ5zgbjXw"',
+    __BAR_CONTRACT__: '"VFr3Bk-uM-motpNNkkFg4lNW1BMmSfzqsVO551Ho4hA"',
+  },
   plugins: [svelte(), notifier()],
   resolve: {
     alias: {
