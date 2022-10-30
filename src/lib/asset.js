@@ -37,6 +37,7 @@ query {
     //.then(x => (console.log(x), x))
     .then(compose(
       take(count),
+      filter(n => n.title),
       map(node => {
         return {
           id: prop('id', node),
