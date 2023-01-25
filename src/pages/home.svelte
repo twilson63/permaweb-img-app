@@ -1,10 +1,9 @@
 <script>
   import { providers } from "ethers";
   import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
-  import * as nearAPI from "near-api-js";
 
   import { imgCache } from "../store.js";
-  import { deploy, deployBundlr } from "../lib/deploy-path.js";
+  import { deploy, deployAr } from "../lib/deploy.js";
   import DeployDialog from "../dialogs/deploy.svelte";
   import ErrorDialog from "../dialogs/error.svelte";
   import ConfirmDialog from "../dialogs/confirm.svelte";
@@ -13,15 +12,7 @@
   //import { WebBundlr } from "@bundlr-network/client";
   const WebBundlr = Bundlr.default;
 
-  const { connect, keyStores, WalletConnection } = nearAPI;
   const BAR = __BAR_CONTRACT__;
-  const NEAR_OPTS = {
-    networkId: "mainnet",
-    keyStore: new keyStores.BrowserLocalStorageKeyStore(),
-    nodeUrl: "https://rpc.mainnet.near.org",
-    walletUrl: "https://wallet.mainnet.near.org",
-    helperUrl: "https://helper.mainnet.near.org",
-  };
 
   let files = [];
   let title = "";
@@ -39,16 +30,14 @@
     errorDlg = true;
   }
 
-  const toArrayBuffer = (file) =>
-    new Promise((resolve, reject) => {
-      const fr = new FileReader();
-      fr.readAsArrayBuffer(file);
-      fr.addEventListener("loadend", (evt) => {
-        resolve(evt.target.result);
-      });
-    });
-
   async function doDeploy(e) {
+    const asset = {
+      file: files[0],
+      title,
+      description,
+      topics,
+    };
+
     if (currency === "matic") {
       if (!window.ethereum) {
         showError("Metamask is required!");
@@ -77,27 +66,7 @@
           await bundlr.fund(price.minus(balance).multipliedBy(1.1).toFixed(0));
         }
 
-        const trx = await bundlr.createTransaction(
-          await toArrayBuffer(files[0]),
-          {
-            tags: [{ name: "Content-Type", value: files[0].type }],
-          }
-        );
-
-        await trx.sign();
-
-        const result = await trx.upload();
-
-        const addr = await arweaveWallet.getActiveAddress();
-
-        const result2 = await deployBundlr(
-          title,
-          description,
-          addr,
-          files[0].type,
-          result.data.id,
-          topics
-        );
+        const result = await deploy(bundlr, asset);
 
         deployDlg = false;
 
@@ -118,77 +87,6 @@
         errorMessage = e.message;
         errorDlg = true;
       }
-    } else if (currency === "near") {
-      /** wip
-       * need to handle redirect for success and failure
-       * the connect process leaves the app, so upon redirect
-       * we need to reconnect to arweave wallet and ingest the
-       * redirect information. Then restore the upload info for
-       * the img form.
-       */
-      deployDlg = true;
-      const near = await connect(NEAR_OPTS);
-      const provider = new WalletConnection(near, "bundlr");
-      await provider.requestSignIn("img", "img.arweave.dev");
-
-      const bundlr = new WebBundlr(
-        "https://node1.bundlr.network",
-        "near",
-        provider
-      );
-      await bundlr.ready();
-
-      // fund account
-      const price = await bundlr.getPrice(files[0].size);
-      const balance = await bundlr.getLoadedBalance();
-
-      if (balance.isLessThan(price)) {
-        await bundlr.fund(price.minus(balance).multipliedBy(1.1).toFixed(0));
-      }
-
-      const trx = await bundlr.createTransaction(
-        await toArrayBuffer(files[0]),
-        {
-          tags: [
-            { name: "Content-Type", value: files[0].type },
-            { name: "Protocol-Name", value: "BAR" },
-            { name: "Action", value: "Burn" },
-            { name: "App-Name", value: "SmartWeaveAction" },
-            { name: "App-Version", value: "0.3.0" },
-            { name: "Input", value: JSON.stringify({ function: "mint" }) },
-            { name: "Contract", value: BAR },
-          ],
-        }
-      );
-
-      await trx.sign();
-
-      const result = await trx.upload();
-
-      const addr = await arweaveWallet.getActiveAddress();
-
-      const result2 = await deployBundlr(
-        title,
-        description,
-        addr,
-        files[0].type,
-        result.data.id,
-        topics
-      );
-
-      deployDlg = false;
-
-      // reset form
-      document.forms[0].reset();
-
-      tx = result2.id;
-
-      $imgCache = [
-        ...$imgCache,
-        { id: result2.id, src: URL.createObjectURL(files[0]) },
-      ];
-
-      confirmDlg = true;
     } else if (currency === "sol") {
       if (!window.solana) {
         showError("Phantom Wallet is required!");
@@ -214,35 +112,7 @@
           await bundlr.fund(price.minus(balance).multipliedBy(1.1).toFixed(0));
         }
 
-        const trx = await bundlr.createTransaction(
-          await toArrayBuffer(files[0]),
-          {
-            tags: [
-              { name: "Content-Type", value: files[0].type },
-              { name: "Protocol-Name", value: "BAR" },
-              { name: "Action", value: "Burn" },
-              { name: "App-Name", value: "SmartWeaveAction" },
-              { name: "App-Version", value: "0.3.0" },
-              { name: "Input", value: JSON.stringify({ function: "mint" }) },
-              { name: "Contract", value: BAR },
-            ],
-          }
-        );
-
-        await trx.sign();
-
-        const result = await trx.upload();
-
-        const addr = await arweaveWallet.getActiveAddress();
-
-        const result2 = await deployBundlr(
-          title,
-          description,
-          addr,
-          files[0].type,
-          result.data.id,
-          topics
-        );
+        const result = await deploy(bundlr, asset);
 
         deployDlg = false;
 
@@ -278,24 +148,11 @@
 
       try {
         deployDlg = true;
-        const data = await toArrayBuffer(files[0]);
-        const result = await deploy(
-          title,
-          description,
-          addr,
-          files[0].type,
-          data,
-          topics
-        );
+        const result = await deployAr(asset);
 
         deployDlg = false;
-
         // reset form
         e.target.reset();
-        // files = [];
-        // title = "";
-        // description = "";
-
         tx = result.id;
         $imgCache = [
           ...$imgCache,

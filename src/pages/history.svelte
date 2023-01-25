@@ -86,14 +86,15 @@
   }
 
   async function getImages(addr) {
-    const transferredImages = await excludeTransferred(addr);
-    return (
-      Promise.all([imagesByOwner(addr), includeTransferred(addr)])
-        .then((results) => concat(results[0], results[1]))
-        .then(reject((a) => transferredImages[a.id] === 100))
-        // sort!
-        .then(sortWith([descend(prop("timestamp"))]))
-    );
+    // const transferredImages = await excludeTransferred(addr);
+    // return (
+    //   Promise.all([imagesByOwner(addr), includeTransferred(addr)])
+    //     .then((results) => concat(results[0], results[1]))
+    //     .then(reject((a) => transferredImages[a.id] === 100))
+    //     // sort!
+    //     .then(sortWith([descend(prop("timestamp"))]))
+    // );
+    return await imagesByOwner(addr);
   }
 
   let images = getImages(addr);
