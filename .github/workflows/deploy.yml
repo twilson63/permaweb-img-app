@@ -1,0 +1,21 @@
+name: publish img
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 18.x
+      - run: yarn
+      - run: yarn deploy
+        env:
+          ARNS: ${{ secrets.ARNS }}
