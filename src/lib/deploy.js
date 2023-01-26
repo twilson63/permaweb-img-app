@@ -77,7 +77,7 @@ export async function deploy(bundlr, asset) {
 export async function deployAr(asset) {
   const data = await toArrayBuffer(asset.file);
   const addr = await window.arweaveWallet.getActiveAddress();
-  console.log(data)
+
   const tx = await arweave.createTransaction({ data })
   tx.addTag('App-Name', 'SmartWeaveContract')
   tx.addTag('App-Version', '0.3.0')

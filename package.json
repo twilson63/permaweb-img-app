@@ -8,7 +8,7 @@
     "build": "vite build",
     "build:contract": "node build.js",
     "preview": "vite preview",
-    "deploy": "arkb deploy dist --use-bundler https://node2.bundlr.network --wallet wallet.json",
+    "deploy": "yarn build && node deploy.mjs",
     "gen_wallet": "node scripts/wallet.js"
   },
   "devDependencies": {

@@ -51,7 +51,7 @@
         await provider._ready();
 
         const bundlr = new WebBundlr(
-          "https://node1.bundlr.network",
+          "https://node2.bundlr.network",
           "matic",
           provider
         );
@@ -73,11 +73,11 @@
         // reset form
         document.forms[0].reset();
 
-        tx = result2.id;
+        tx = result.id;
 
         $imgCache = [
           ...$imgCache,
-          { id: result2.id, src: URL.createObjectURL(files[0]) },
+          { id: result.id, src: URL.createObjectURL(files[0]) },
         ];
 
         confirmDlg = true;
@@ -99,7 +99,7 @@
         await provider.connect();
 
         const bundlr = new WebBundlr(
-          "https://node1.bundlr.network",
+          "https://node2.bundlr.network",
           "solana",
           provider
         );
@@ -119,11 +119,11 @@
         // reset form
         document.forms[0].reset();
 
-        tx = result2.id;
+        tx = result.id;
 
         $imgCache = [
           ...$imgCache,
-          { id: result2.id, src: URL.createObjectURL(files[0]) },
+          { id: result.id, src: URL.createObjectURL(files[0]) },
         ];
 
         confirmDlg = true;

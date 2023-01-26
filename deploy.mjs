@@ -4,7 +4,7 @@ import fs from 'fs'
 import Arweave from 'arweave'
 
 
-const ANT = '5H0wvyJzmNrzASrS9FtPlhfteS7_rCN9nxSeQPvXWVM'
+const ANT = 'AZ2TTY7cZv5HoxQagpDpfzkklOj2tteKbmcthMbUWPs'
 const arweave = Arweave.init({ host: 'arweave.net', port: 443, protocol: 'https' })
 //const jwk = JSON.parse(fs.readFileSync('../wallet.json', 'utf-8'))
 const jwk = JSON.parse(Buffer.from(process.env.ARNS, 'base64').toString('utf-8'))
