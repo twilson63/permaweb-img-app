@@ -1,5 +1,6 @@
 import { WarpFactory, defaultCacheOptions } from 'warp-contracts/web'
 import { add, compose, propEq, values, length, prop, filter, reduce, pluck, path } from 'ramda'
+import Stamps from '@permaweb/stampjs'
 
 const arweave = Arweave.init({
   host: 'arweave.net',
@@ -8,17 +9,13 @@ const arweave = Arweave.init({
 })
 
 const warp = WarpFactory.forMainnet({ ...defaultCacheOptions, inMemory: true })
-const CACHE = 'https://cache.permapages.app'
+const DRE = 'https://dre-1.warp.cc'
+const stamps = Stamps.init({ warp })
 
 const STAMPCOIN = __STAMP_CONTRACT__
 let data = null
 
-const stampCount = asset => compose(
-  length,
-  filter(propEq('asset', asset)),
-  values,
-  prop('stamps')
-)
+const stampCount = asset => stamps.count(asset).then(r => r.total)
 
 const rewardSum = asset => compose(
   reduce(add, 0),
@@ -28,53 +25,11 @@ const rewardSum = asset => compose(
 )
 
 export async function stamp(transactionId) {
-  return warp.contract(STAMPCOIN).connect('use_wallet').writeInteraction({
-    function: 'stamp',
-    transactionId,
-    timestamp: Date.now()
-  })
-    .then(x => fetch(`${CACHE}/${STAMPCOIN}`)
-      .then(res => res.json())
-      .catch(e => warp.contract(STAMPCOIN)
-        .setEvaluationOptions({
-          internalWrites: true,
-          allowBigInt: true,
-          allowUnsafeClient: true
-        })
-        .readState()
-        .then(path(['cachedValue', 'state']))
-
-      )
-      .then(state => (data = state, data))
-      .then(_ => x)
-    )
-}
-
-export async function isVouched(addr) {
-  return arweave.api.post('graphql', {
-    query: `
-query {
-  transactions(tags: {name: "Vouch-For", values: ["${addr}"]}) {
-    edges {
-      node {
-        id
-      }
-    }
-  }
-}
-  `}).then(result => (result.data?.data?.transactions?.edges || []).length > 0)
+  return stamps.stamp(transactionId)
 }
 
 export async function getCount(asset) {
-  // temporarily cache data during session
-  if (data) {
-    return stampCount(asset)(data)
-  }
-
-  return fetch(`${CACHE}/${STAMPCOIN}`)
-    .then(res => res.json())
-    .then(state => (data = state, state))
-    .then(stampCount(asset))
+  return stampCount(asset)
 }
 
 export async function getRewards(asset) {
@@ -82,8 +37,8 @@ export async function getRewards(asset) {
   if (data) {
     return rewardSum(asset)(data)
   }
-  return fetch(`${CACHE}/${STAMPCOIN}`)
-    .then(res => res.json())
+  return fetch(`${DRE}/contract?id=${STAMPCOIN}&query=$`)
+    .then(res => res.json()).then(r => r.result[0])
     .then(state => (data = state, state))
     .then(rewardSum(asset))
 }

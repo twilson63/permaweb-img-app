@@ -5,6 +5,7 @@ const account = new Account()
 
 const ANS = 'HrPi8hFc7M5dbrtlELfTKwPr53RRrDBgXGdDkp0h-j4'
 const CACHE = 'https://cache.permapages.app'
+const DRE = 'https://dre-1.warp.cc'
 
 export async function getProfile(addr) {
   const res = await account.get(addr);
@@ -13,8 +14,9 @@ export async function getProfile(addr) {
 }
 
 export async function accountByANS(name) {
-  return fetch(`${CACHE}/${ANS}`).then(res => res.ok ? res.json() : Promise.reject('CONTRACT NOT FOUND!'))
-    .then(prop('users'))
+
+  return fetch(`${DRE}/contract?id=${ANS}&query=$.users`).then(res => res.ok ? res.json() : Promise.reject('CONTRACT NOT FOUND!'))
+    .then(r => r.result[0])
     .then(find(propEq('currentLabel', head(split('.', name)))))
     .then(user => user ? user : ({}))
 }

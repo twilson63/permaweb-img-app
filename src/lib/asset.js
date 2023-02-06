@@ -1,6 +1,7 @@
 import { take, compose, prop, propEq, find, map, pluck, path, reduce, values, filter } from 'ramda'
-import { WarpFactory } from 'warp-contracts/web'
 import Account from 'arweave-account'
+
+const { WarpFactory } = window.warp;
 
 const arweave = Arweave.init({
   host: 'arweave.net',
@@ -14,6 +15,7 @@ const account = new Account({
   cacheTime: 60
 })
 const warp = WarpFactory.forMainnet()
+const DRE = 'https://dre-1.warp.cc'
 
 export async function listAssets(count) {
   return fetch('https://arweave.net/graphql', {
@@ -62,6 +64,7 @@ query {
 export async function assetDetails(asset, addr) {
   // const state = await fetch('https://cache.permapages.app/' + asset)
   //   .then(res => res.ok ? res.json() : Promise.reject(new Error('could not find asset state!')))
+  await warp.contract(asset).syncState(DRE + '/contract', { validity: true })
   const state = await warp.contract(asset).setEvaluationOptions({ internalWrites: true, allowBigInt: true }).readState()
     .then(path(['cachedValue', 'state']))
   if (asset === 'YyHY6_A7RyoVoKreIjld6DsbwvURhfBh0KFRNvlAgT0') {
@@ -85,9 +88,10 @@ export async function assetDetails(asset, addr) {
 }
 
 export async function transfer({ asset, title, caller, addr, percent }) {
-
+  await warp.contract(asset).syncState(DRE + '/contract', { validity: true })
   const contract = warp.contract(asset).connect('use_wallet').setEvaluationOptions({
-    internalWrites: true
+    internalWrites: true,
+    allowBigInt: true
   })
 
   const res = await contract.viewState({

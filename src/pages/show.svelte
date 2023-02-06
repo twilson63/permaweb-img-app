@@ -12,7 +12,7 @@
 
   import { onMount } from "svelte";
   import { imgCache, profile } from "../store.js";
-  import { isVouched, stamp, getCount, getRewards } from "../lib/stamp.js";
+  import { stamp, getCount, getRewards } from "../lib/stamp.js";
   import { getProfile } from "../lib/account.js";
 
   export let id;
@@ -72,18 +72,8 @@
     }
     tryingToStamp = false;
     stampDlg = true;
-    const addr = await window.arweaveWallet.getActiveAddress();
-    console.log(addr);
-    isVouched(addr)
-      .then((res) =>
-        res
-          ? stamp(id)
-          : Promise.reject(
-              new Error(
-                "Could not stamp asset, make sure you are Verified by a Vouch Service, <a target='_blank' class='link' href='https://vouchdao.xyz'>https://vouchdao.xyz</a>"
-              )
-            )
-      )
+
+    stamp(id)
       .then((res) => {
         assetCount = getCount(id);
         stampDlg = false;
@@ -184,7 +174,9 @@
                       alt="avatar"
                     />
                     {#if creator.profile.handleName === ""}
-                      <div>{asset.owner}</div>
+                      <div>
+                        {take(5, asset.owner) + "-" + takeLast(5, asset.owner)}
+                      </div>
                     {:else}
                       <div>{creator.profile.handleName}</div>
                     {/if}
