@@ -828,9 +828,13 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@permaweb/stampjs@https://js_stamps.g8way.io":
-  version "0.0.2"
-  resolved "https://js_stamps.g8way.io#ef5ed4c01e0367bf3683da01b2f4294ed43a2de7"
+"@permaweb/stampjs@^0.0.13":
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/@permaweb/stampjs/-/stampjs-0.0.13.tgz#ba6d5ab2eb43c02cbf533dd81f117751095e9de1"
+  integrity sha512-Kmu/lQFvrbQKMi/VewhVOWUn+CxJgoM55DdhSfFIUmZfThWosrf60+nT50YRU/eN8CyfJ4iBr3210nv4NUY3IA==
+  dependencies:
+    fpjson-lang "^0.1.3"
+    ramda "^0.28.0"
 
 "@randlabs/communication-bridge@^1.0.0":
   version "1.0.0"
@@ -3466,6 +3470,13 @@ formidable@^1.2.2:
   version "1.2.6"
   resolved "https://registry.yarnpkg.com/formidable/-/formidable-1.2.6.tgz#d2a51d60162bbc9b4a055d8457a7c75315d1a168"
   integrity sha512-KcpbcpuLNOwrEjnbpMC0gS+X8ciDoZE1kkqzat4a8vrprf+s9pKNQ/QIwWfbfs4ltgmFl3MD177SNTkve3BwGQ==
+
+fpjson-lang@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/fpjson-lang/-/fpjson-lang-0.1.3.tgz#850a3bac1da2b4488118000acf4aab1bb06109e6"
+  integrity sha512-GBLFEQmeoTdFLp1yfDhierzozniCClzeuu+Y9Xny+JIf1gOGM8n/gqZqn0sneKikt71K6qxFVZDrpfkPTA53nA==
+  dependencies:
+    ramda "^0.28.0"
 
 fraction.js@^4.2.0:
   version "4.2.0"
