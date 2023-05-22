@@ -12,7 +12,7 @@
 
   import { onMount } from "svelte";
   import { imgCache, profile } from "../store.js";
-  import { stamp, getCount, getRewards } from "../lib/stamp.js";
+  import { stamp, getCount } from "../lib/stamp.js";
   import { getProfile } from "../lib/account.js";
 
   export let id;
@@ -74,8 +74,9 @@
     stampDlg = true;
 
     stamp(id)
-      .then((res) => {
-        assetCount = getCount(id);
+      .then((_) => new Promise((resolve) => setTimeout(resolve, 500)))
+      .then(async (res) => {
+        assetCount = await getCount(id);
         stampDlg = false;
       })
       .catch((e) => {
@@ -209,7 +210,7 @@
                   {/await}
                 </div>
               </div>
-              <div>
+              <!-- <div>
                 <div class="flex flex-col">
                   <div class="uppercase">Rewards</div>
                   <div class="flex space-x-4">
@@ -219,7 +220,7 @@
                     {/await}
                   </div>
                 </div>
-              </div>
+              </div> -->
             </div>
             <div class="md:hidden">
               Link: <a class="link" href="https://arweave.net/{id}"

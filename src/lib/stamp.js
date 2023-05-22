@@ -10,19 +10,19 @@ const arweave = Arweave.init({
 
 const warp = WarpFactory.forMainnet({ ...defaultCacheOptions, inMemory: true })
 const DRE = 'https://dre-1.warp.cc'
-const stamps = Stamps.init({ warp })
+const stamps = Stamps.init({ warp, arweave })
 
 const STAMPCOIN = __STAMP_CONTRACT__
 let data = null
 
 const stampCount = asset => stamps.count(asset).then(r => r.total)
 
-const rewardSum = asset => compose(
-  reduce(add, 0),
-  pluck('coins'),
-  filter(propEq('asset', asset)),
-  prop('rewardLog')
-)
+// const rewardSum = asset => compose(
+//   reduce(add, 0),
+//   pluck('coins'),
+//   filter(propEq('asset', asset)),
+//   prop('balances')
+// )
 
 export async function stamp(transactionId) {
   return stamps.stamp(transactionId)
@@ -32,13 +32,3 @@ export async function getCount(asset) {
   return stampCount(asset)
 }
 
-export async function getRewards(asset) {
-  // temporarily cache data during session
-  if (data) {
-    return rewardSum(asset)(data)
-  }
-  return fetch(`${DRE}/contract?id=${STAMPCOIN}&query=$`)
-    .then(res => res.json()).then(r => r.result[0])
-    .then(state => (data = state, state))
-    .then(rewardSum(asset))
-}

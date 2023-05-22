@@ -15,7 +15,7 @@ const publicUrl = `3000-${host}`
 export default defineConfig({
   base: '',
   define: {
-    __STAMP_CONTRACT__: '"61vg8n54MGSC9ZHfSVAtQp4WjNb20TaThu6bkQ86pPI"',
+    __STAMP_CONTRACT__: '"TlqASNDLA1Uh8yFiH-BzR_1FDag4s735F3PoUFEv2Mo"',
     __BAR_CONTRACT__: '"VFr3Bk-uM-motpNNkkFg4lNW1BMmSfzqsVO551Ho4hA"',
     __ASSET_SOURCE__: '"j9Lk3cTmukZS2-hae9GYxK1CuHtWtHcA1V5-tkIfu5k"'
   },

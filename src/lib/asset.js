@@ -25,7 +25,8 @@ export async function listAssets(count) {
       query: `
 query {
   transactions(first: 100, tags: [
-    {name: "Type", values: ["image", "video", "pdf", "audio"]}
+    {name: "Type", values: ["image"]},
+    {name: "Content-Type", values: ["image/jpeg", "image/png", "image/jpg"]}
   ]) {
     edges {
       node {
