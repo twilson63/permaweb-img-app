@@ -264,7 +264,7 @@
                 -->
               </select>
               <label class="label text-sm text-gray-400"
-                >(when using $AR you also mint $BAR)</label
+                >(when using $AR you also mint $U)</label
               >
             </div>
             <div class="my-16 space-y-4">

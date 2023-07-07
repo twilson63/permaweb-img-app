@@ -153,11 +153,18 @@
         <div class="w-[325px] md:w-1/2 px-0 mx-0 md:ml-8">
           <div class="mb-4 px-0 mx-0 flex items-start justify-between">
             <h1 class="text-3xl">{asset.title}</h1>
-            <a
-              target="_blank"
-              href={tweetLink(asset.title, id)}
-              class="btn btn-outline btn-sm rounded-none font-normal">share</a
-            >
+            <div>
+              <a
+                target="_blank"
+                href={tweetLink(asset.title, id)}
+                class="btn btn-outline btn-sm rounded-none font-normal">share</a
+              >
+              <a
+                target="_blank"
+                href={`https://bazar.arweave.dev/#/asset/${id}`}
+                class="btn btn-outline btn-sm rounded-none font-normal">BazAR</a
+              >
+            </div>
           </div>
           <p class="text-xl">{asset.description}</p>
           {#if asset.topics.length > 0}

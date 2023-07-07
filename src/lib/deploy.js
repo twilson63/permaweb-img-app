@@ -47,8 +47,11 @@ export async function deploy(bundlr, asset) {
     {
       name: "Init-State",
       value: JSON.stringify({
+        title: asset.title,
+        description: asset.description,
         creator: addr,
-        pairs: [],
+        claimable: [],
+        name: asset.title,
         ticker: "IMG-ASSET",
         balances: {
           [addr]: 1 * 1e6,
@@ -56,6 +59,7 @@ export async function deploy(bundlr, asset) {
         emergencyHaltWallet: addr,
         contentType: asset.file.type,
         settings: [["isTradeable", true]],
+        transferable: true
       }),
     },
     { name: "Creator", value: addr },
@@ -85,6 +89,9 @@ export async function deployAr(asset) {
 
   tx.addTag('Contract-Src', SRC)
   tx.addTag('Init-State', JSON.stringify({
+    title: asset.title,
+    description: asset.description,
+    name: asset.title,
     creator: addr,
     ticker: "IMG-ASSET",
     balances: {
@@ -92,8 +99,9 @@ export async function deployAr(asset) {
     },
     contentType: asset.file.type,
     emergencyHaltWallet: addr,
-    pairs: [],
-    settings: [["isTradeable", true]]
+    claimable: [],
+    settings: [["isTradeable", true]],
+    transferable: true
   }))
   tx.addTag('Creator', addr)
   tx.addTag('Title', asset.title)
